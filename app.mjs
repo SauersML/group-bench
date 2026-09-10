@@ -5,7 +5,7 @@ const datedGroups=new Map(datedSignatures().map(s=>[s.group.id,s.facts]));
 import {byId,label,propertyId,classify,explanation,signatures,witnessProof} from './engine.mjs';
 const $=selector=>document.querySelector(selector);
 const escape=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const defaultProperties=['fp','intermediate','hyp','rf','!rf','amenable','!amenable','t','sofic','hyperlinear','mf','!mf'];
+const defaultProperties=['fp','intermediate','hyp','rf','!rf','amenable','!amenable','t','sofic','!sofic','hyperlinear','mf','!mf'];
 const state={query:[],properties:[...defaultProperties],cell:null};
 let pickerTarget='properties';
 const activeQuery=()=>[...new Set([...state.query,...(state.cell||[])])];
@@ -55,7 +55,7 @@ function openPicker(target){
  $('#search').value='';renderPicker();$('#picker').showModal();$('#search').focus();
 }
 function renderQuery(){
- $('#query-chips').innerHTML=state.query.length?state.query.map(lit=>`<span class="chip ${lit[0]==='!'?'negative':''}">${escape(label(lit))}<button data-remove="${lit}" aria-label="Remove ${escape(label(lit))}">×</button></span>`).join(''):'<span class="muted">No extra requirements</span>';
+ $('#query-chips').innerHTML=state.query.length?state.query.map(lit=>`<span class="chip ${lit[0]==='!'?'negative':''}">${escape(label(lit))}<button data-remove="${lit}" aria-label="Remove ${escape(label(lit))}">×</button></span>`).join(''):'';
  $('#clear').hidden=!state.query.length;
 }
 function axisHTML(literal,axis){return `<button class="${axis}-name ${literal[0]==='!'?'negative':''}" data-define="${propertyId(literal)}" data-hover-property="${literal}"><span>${escape(label(literal))}</span></button>`;}

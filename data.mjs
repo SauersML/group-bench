@@ -1,5 +1,7 @@
 // All statements concern countable discrete groups. Missing facts are unknown.
 export const sources = {
+ openaiNonsofic:{title:'OpenAI — Nonsofic groups exist, Ten Advances, Chapter 3 (1 August 2026, original manuscript)',url:'https://cdn.openai.com/pdf/ten-proofs-oai-original.pdf'},
+ openaiAnnouncement:{title:'OpenAI — Ten advances in mathematics and theoretical computer science (1 August 2026)',url:'https://openai.com/index/ten-advances-in-mathematics/'},
  growthQuestion:{title:'Babenko–Sabourau — Minimal volume entropy and fiber growth (2025), §2.8',url:'https://jep.centre-mersenne.org/item/10.5802/jep.295.pdf'},
  hyperbolicQuestion:{title:'Schesler — Finitely generated infinite torsion groups that are residually finite simple (2025), Introduction',url:'https://doi.org/10.1016/j.aim.2025.110441'},
  bdh1980:{title:'Baumslag–Dyer–Heller — The topology of discrete groups (1980)',url:'https://doi.org/10.1016/0022-4049(80)90040-7'},
@@ -200,6 +202,7 @@ export const groups = [
  g('grigorchuk98','Grigorchuk’s finitely presented extension','𝔊̃','A finitely presented amenable extension constructed outside the elementary amenable class.','fp amenable !ea','grigorchuk98'),
  g('erschler','Erschler’s intermediate-growth example','E','A construction separating intermediate growth from residual finiteness.','intermediate !rf','erschler'),
  g('nekrashevych','Nekrashevych’s simple torsion group','N','An infinite finitely generated simple torsion group of intermediate growth containing the first Grigorchuk group.','!finite fg simple torsion intermediate !exponent','nekrashevych'),
+ g('openai','OpenAI’s non-sofic Leavitt unit group','L₂×','The countable unit group of the binary Leavitt algebra L_F₂(1,2). OpenAI’s Chapter 3 proves that this group is not sofic.','!sofic','openaiNonsofic'),
  g('sauers','Sauers’ sofic non-MF group','E','The explicit finitely presented group in Palomar record PALOMAR-2026-08-24-000006 v1. The pinned theorem proves soficity and failure of the CDE operator-norm MF property.','fp sofic !mf','palomar'),
  g('thompson','Thompson’s group F','F','Piecewise-linear dyadic homeomorphisms of the unit interval. Amenability is deliberately not assigned here.','!finite fp finfty tf !abelian !ea !rf !f2 bo exp !simple','thompson')
 ];

@@ -3,6 +3,7 @@
 // this catalog, not a universal priority certificate. Unknown dates stay null.
 const undated = (note, source) => ({firstProof:null, dateKind:'First proof date not established', source, note, milestones:[]});
 export const history = {
+ openai:{firstProof:'2026-08-01',dateKind:'First public non-soficity proof',source:'openaiAnnouncement',note:'OpenAI announced the non-soficity result on 1 August 2026 and released the original manuscript. This dates the non-soficity proof, not the earlier construction of the Leavitt algebra. No MF, hyperlinear, or finite-presentation property is assigned without a separate proof.',milestones:[{date:'2026-08-01',kind:'Public non-soficity proof',claim:'The unit group of the binary Leavitt algebra L_F₂(1,2) is not sofic (Chapter 3).',source:'openaiNonsofic',facts:['!sofic']}]},
  one:undated('The one-element construction is immediate. No historical first-proof attribution is established here.','elementary'),
  c2:undated('Classical modular arithmetic. The displayed construction proves existence; a historical first proof is not identified.','elementary'),
  c4:undated('Classical modular arithmetic. The displayed construction proves existence; a historical first proof is not identified.','elementary'),

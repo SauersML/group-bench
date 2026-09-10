@@ -74,6 +74,9 @@ test('every property has a usable logical complement, including all approximatio
   for(const g of result.witnesses)assert.ok(signatures.find(s=>s.group.id===g.id).facts.has(negate(p.id)));
  }
  assert.equal(classify(['sofic','!mf']).status,'exists');
+ assert.ok(classify(['!sofic','!amenable','!rf']).witnesses.some(g=>g.id==='openai'));
+ const openai=signatures.find(s=>s.group.id==='openai');
+ for(const literal of ['mf','!mf','hyperlinear','!hyperlinear','fp'])assert.ok(!openai.facts.has(literal),`Non-soficity alone does not decide ${literal}.`);
  assert.ok(classify(['fp','sofic','hyperlinear','!mf']).witnesses.some(g=>g.id==='sauers'));
  assert.equal(classify(['amenable','!mf']).status,'impossible');
 });

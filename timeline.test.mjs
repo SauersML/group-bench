@@ -18,6 +18,10 @@ test('dated deductions stay within established group signatures and retain suppo
  }
  assert.equal(dates.find(s=>s.group.id==='one').facts.size,0,'Undated classical examples stay undated.');
  assert.equal(dates.find(s=>s.group.id==='q8').facts.size,0,'Algebra construction is not a blanket date for group properties.');
+ const openai=dates.find(s=>s.group.id==='openai').facts;
+ assert.equal(openai.get('!sofic').date,'2026-08-01');
+ assert.equal(openai.get('!amenable').date,'2026-08-01');
+ assert.equal(pairs.get(['!sofic','!amenable'].sort().join(',')).date,'2026-08-01');
  const sauers=dates.find(s=>s.group.id==='sauers').facts;
  assert.equal(sauers.get('!amenable').date,'2026-08-24');
  assert.equal(sauers.get('hyperlinear').date,'2026-08-24');

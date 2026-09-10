@@ -14,7 +14,10 @@ so larger selections do not introduce an internal scrollbar. Hover retains full 
 and evidence when cells become small.
 The default selection includes finitely presented + intermediate growth and
 hyperbolic + not residually finite, with sourced open-question context on hover.
-MF, hyperlinear, sofic, amenability, and property (T) are also visible.
+MF, hyperlinear, sofic, not sofic, amenability, and property (T) are also visible.
+OpenAI’s non-sofic Leavitt unit group is included with the original manuscript
+and the public proof date of 1 August 2026. Non-soficity is not treated as a proof
+of non-hyperlinearity or failure of MF.
 Select “Has” or “Does not have”; both versions can appear, and every selection is added to both axes.
 Hover over a header for its definition or a cell for examples, dates, and
 obstructions. Click a cell for full evidence. Optional filters apply to every
@@ -80,13 +83,15 @@ hyperlinear + not MF via the separately sourced sofic ⇒ hyperlinear theorem.
 The denominator is all unordered pairs of distinct signed properties: with 57
 properties and their negations, there are 114 × 113 / 2 = 6,441 pairs. Mirror
 cells count once and diagonal repetitions are excluded. Filters and the visible
-grid never change this denominator. The line chart always runs from 0 to 100%. Both axes use shifted logarithmic
+grid never change this denominator. The step line chart always runs from 0 to 100%. Both axes use shifted logarithmic
 spacing: reversed log(1 + years before the right endpoint) expands recent dates,
 and log(1 + percentage) expands low percentages while preserving zero.
-The labeled right endpoint is at least the start of next year. The plot is a pure
-line without markers. Hover by date, or focus the line and use arrow keys, to
-inspect dated observations; click or press Enter to open their sources. Straight segments
-connect dated observations; they do not assign proof dates between observations.
+The labeled right endpoint is at least the start of next year. The plot spans the content width on a white background and uses a pure
+step line without markers. Hover by date, or focus the line and use arrow keys, to
+inspect dated observations; click or press Enter to open their sources. Horizontal segments
+keep the cumulative total constant between recorded dates; vertical segments show
+newly dated pairs at each date. Axis explanations are in How it works and hover
+details, leaving the main page focused on the grid and chart.
 
 The curve combines explicit dated property proofs with dated implication
 theorems. A deduction uses the latest date among every premise and theorem;
