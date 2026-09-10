@@ -71,3 +71,81 @@ The black-border matcher requires an unresolved cell and a conjunction equivalen
 Open-question review dates never enter the solved-pairs timeline. A new example contributes dated seed facts; derived dates also account for the theorem dates needed to obtain them. A revision date is not silently presented as the first historical proof. The total remains all **6,441 distinct unordered signed pairs**, independent of displayed columns or filters.
 
 Research used primary papers, author problem lists, publisher records, arXiv version histories, and the pinned registry statement. Searches covered approximation properties, geometric and algorithmic properties, growth, torsion, amenability, orderability, and finiteness conditions, with citation-following around the August non-soficity papers. Search-result crawl dates were not treated as publication dates. The arXiv API was rate-limited during the review, so the recent list is based on targeted searches and individually checked histories, not a complete monthly feed. An unbordered Unknown remains unclassified by this catalog; it should not be interpreted as either a resolved question or an exhaustive literature verdict.
+
+
+# Integration of the group-approximation pass — 10 September 2026
+
+On 9 September 2026 the 1,032 unresolved pairs were mined against the Cairn
+research graph and formal development of
+[SauersML/group-approximation](https://github.com/SauersML/group-approximation)
+(snapshot `b285894`), and against the literature those files cite. The findings
+were filed as issues [#1–#9](https://github.com/SauersML/group-bench/issues) and
+integrated here on 10 September 2026. Every proposal was checked against the
+engine before integration: no existing witness becomes inconsistent, no
+previously resolved pair changes status, and the count of unresolved pairs
+falls from 1,032 to 193 (5,805 exist, 443 impossible). The catalog now has
+161 rules and 86 witnesses.
+
+## Priority claims (the only ours-first items)
+
+- **OpenAI’s Leavitt unit group** `H = L_𝔽₂(1,2)^×` is **simple** and **not MF**
+  (group-approximation, Theorem `thm:headline`; Lean statement
+  `manuscriptUnitGroupHeadline`, hypothesis-free; first committed at rank
+  twelve on 24 August 2026, at the unit group on 7 September 2026). Neither
+  fact appears in OpenAI’s Chapter 3, Khanh–Thanh, Fournier-Facio, Kun–Thom,
+  Alekseev–Thom or Eckhardt. Consequently `H` is the first group known to be
+  neither sofic nor MF (`!sofic` OpenAI, 1 August 2026; `!mf` 24 August 2026).
+  Finite generation and property (T) of `H` are stated in OpenAI’s Chapter 3
+  §3.1 through Khanh–Thanh’s `R^× = EL₉(R)` and Ershov–Jaikin-Zapirain, and
+  perfectness is Khanh–Thanh’s Proposition 4.2; those are recorded as
+  literature. Torsion in `H` is noted by Fournier-Facio. The decidable word
+  problem of `H` rests on a prose proof in the research graph, not on Lean.
+- **The Clifford lamp group W** (`thm:amenable-trace`): sofic, not MF, with a
+  nontrivial central involution and a surjection onto ℤ; dated by public
+  commits of 12–14 August 2026 and Lean-verified without hypotheses. The
+  timeline now dates the pair sofic ∧ not MF to 14 August 2026, ten days
+  before the Palomar record, on the strength of those commits. Eckhardt’s
+  preprint of 28 August 2026 proves non-MF for lamp groups of the same shape
+  and credits the earlier examples; his Theorem 4.3 also gives the Kun–Thom
+  witness its non-MF fact.
+- **The torsion-free Kazhdan group Q** (`thm:torsion-free`): finitely
+  presented, torsion-free, property (T), not MF, with C*-simple reduced
+  algebra. Manuscript-level; the Lean statement takes the cited Fournier-Facio
+  and Hull inputs as hypotheses. Recorded with that caveat.
+
+## Everything else is literature
+
+Thirty-nine implication rules that the engine could not derive (the residual
+version `perfect ∧ rs ⇒ trivial` of an existing rule alone unlocks 163 pairs;
+also `lea ⇒ mf`, `linear ⇒ lef`, `rs ⇒ lea`, `divisible ∧ rf ⇒ trivial`,
+Chou’s growth dichotomy, Witte Morris, Kuznetsov, McKinsey–Mostowski, Sela,
+Adams–Ballmann, Gersten–Short, Tits–Milnor–Wolf, and definitional gaps such as
+`cyclic ⇒ polycyclic`), facts on fifteen existing witnesses (SL₃(ℤ), Higman’s
+group, Thompson’s F, the Grigorchuk group, the lamplighter, the Heisenberg
+group, ℤ², ℚ, the free groups, A₅, the Kun–Thom group, the free Burnside group,
+the trivial group), and 49 new witnesses, from the finitary alternating group
+and Tarski monsters to Burger–Mozes lattices, Thompson’s V, Kharlampovich’s
+group, Hall’s universal group, Baumslag–Solitar groups, Hyde–Lodha and
+Lodha–Moore groups, Le Boudec’s groups, Miller’s and Boone’s groups,
+Bestvina–Brady and Stallings groups, Promislow’s group, cocompact Sp(2,1)
+lattices, and several synthetic overgroups. Three witnesses are non-explicit
+(existence by counting: a Grigorchuk group `G_ω` with undecidable word problem,
+a Kazhdan group with undecidable word problem) or preprint-sourced
+(Tholozan–Tsouvalas; Titz Mite–Witzel); their descriptions say so.
+
+## New named questions
+
+`hyperlinear_nonsofic` (Pestov, Open question 3.4) and `hyperbolic_sofic`
+(Ozawa, recorded as Pestov’s Open question 9.2) are open; `nonmf`,
+`nonsofic_nonmf` and `tf_nonmf` are solved. Cells strictly stronger than a
+documented question (for instance `!lea ∧ hyp`, or `!hyperlinear` together
+with an independent property) are deliberately not bordered, as before.
+
+## What remains unresolved
+
+The 193 remaining pairs are dominated by the 88 cells involving `!hyperlinear`
+(all downstream of the non-hyperlinear question), non-LEF or non-LEA torsion
+and bounded-exponent groups, orderable non-sofic or non-MF groups (which run
+into the ordered Kazhdan question), non-MF or non-sofic groups without free
+subgroups, acyclic groups with nontrivial amenable radical, and Hopficity in
+the geometric classes.

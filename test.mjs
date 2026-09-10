@@ -127,7 +127,11 @@ test('every property has a usable logical complement, including all approximatio
  assert.equal(classify(['sofic','!mf']).status,'exists');
  assert.ok(classify(['!sofic','!amenable','!rf']).witnesses.some(g=>g.id==='openai'));
  const openai=signatures.find(s=>s.group.id==='openai');
- for(const literal of ['mf','!mf','hyperlinear','!hyperlinear','fp'])assert.ok(!openai.facts.has(literal),`Non-soficity alone does not decide ${literal}.`);
+ for(const literal of ['hyperlinear','!hyperlinear','fp','!fp'])assert.ok(!openai.facts.has(literal),`Not decided for the Leavitt unit group: ${literal}.`);
+ for(const literal of ['!sofic','!mf','simple','t','fg','perfect','!tf'])assert.ok(openai.facts.has(literal),`Recorded for the Leavitt unit group: ${literal}.`);
+ assert.ok(classify(['!sofic','!mf']).witnesses.some(g=>g.id==='openai'));
+ assert.ok(classify(['tf','!mf','cstar','t']).witnesses.some(g=>g.id==='sauers_q'));
+ assert.ok(classify(['sofic','!mf','!centerless','!t']).witnesses.some(g=>g.id==='sauers_w'));
  assert.ok(classify(['fp','sofic','hyperlinear','!mf']).witnesses.some(g=>g.id==='sauers'));
  assert.equal(classify(['amenable','!mf']).status,'impossible');
 });
@@ -174,8 +178,10 @@ test('recent and historical additions certify only their recorded group properti
  }
  for(const id of ['fournier_facio','kun_thom']){
   const s=signatures.find(g=>g.group.id===id);
-  for(const lit of ['mf','!mf','hyperlinear','!hyperlinear'])assert.ok(!s.facts.has(lit),`${id}: ${lit}`);
+  for(const lit of ['hyperlinear','!hyperlinear'])assert.ok(!s.facts.has(lit),`${id}: ${lit}`);
  }
+ for(const lit of ['mf','!mf'])assert.ok(!signatures.find(g=>g.group.id==='fournier_facio').facts.has(lit));
+ assert.ok(signatures.find(g=>g.group.id==='kun_thom').facts.has('!mf'),'Eckhardt’s theorem applies to the Kun–Thom pair.');
  assert.equal(history.kun_thom.firstProof,'2026-08-20');
  assert.equal(history.fisher_lodha.firstProof,'2026-08-26');
 });

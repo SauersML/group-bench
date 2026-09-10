@@ -67,6 +67,14 @@ export const questions=[
   posed:{date:null,by:'Grigorchuk, as recorded in Juschenko’s Question C.6; also Sapir (2007)',source:'juschenkoProblems'},
   source:'nekrashevych2016',sourceDate:'2016-01-06',sources:['sapirProblems','juschenkoProblems'],
   note:'Free Burnside groups of large odd exponent are non-amenable (Adian), and Nekrashevych records in 2016 that every known infinite finitely generated group of bounded exponent is non-amenable. The same question with simplicity added is asked alongside it; a simple example would answer both.'}),
+ question('hyperlinear_nonsofic','!sofic hyperlinear','Is there a hyperlinear group that is not sofic?','open',{
+  posed:{date:'2008-04-24',by:'Pestov, Open question 3.4',source:'approximation'},
+  source:'approximation',sourceDate:'2008-04-24',reviewed:'2026-09-10',
+  note:'Every known non-sofic group comes from the OpenAI compression mechanism, and the hyperlinearity of each is open; OpenAI’s Chapter 3 says so explicitly for the Leavitt unit group. The group-approximation research graph records this as an open root question.'}),
+ question('hyperbolic_sofic','hyp !sofic','Is there a hyperbolic group that is not sofic?','open',{
+  posed:{date:'2008-04-24',by:'Ozawa, recorded as Pestov’s Open question 9.2',source:'approximation'},
+  source:'approximation',sourceDate:'2008-04-24',reviewed:'2026-09-10',
+  note:'Strictly stronger than Gromov’s residual-finiteness question above, since a non-sofic group is not residually finite. Pestov records Ozawa’s question whether every word-hyperbolic group is hyperlinear or sofic.'}),
  // Formerly open, now answered by a catalog witness.
  question('fg_torsion','fg torsion !finite','Is there an infinite finitely generated torsion group?','solved',{
   posed:{date:'1902',by:'Burnside',source:'burnsideHistory'},
@@ -126,6 +134,16 @@ export const questions=[
  question('tf_nonsofic','tf !sofic','Is there a torsion-free non-sofic group?','solved',{
   resolved:{date:'2026-08-03',by:'Fournier-Facio',source:'ff2026',witness:'fournier_facio'},
   note:'A preprint of August 2026 relying on OpenAI’s criterion. The unit group of a Leavitt algebra always has torsion.'}),
+ question('nonmf','!mf','Is there a group that is not MF?','solved',{
+  posed:{date:null,by:'folklore; Carrión–Dadarlat–Eckhardt (2012) and Korchagin (2017) discuss the class without an example',source:'cde2012'},
+  resolved:{date:'2026-08-24',by:'Sauers (Palomar record; Lean-verified)',source:'palomar',witness:'sauers'},reviewed:'2026-09-10',
+  note:'The Palomar record certifies a finitely presented sofic group that is not MF. Eckhardt’s independent preprint of 28 August 2026 proves non-MF for generalized lamp groups.'}),
+ question('nonsofic_nonmf','!sofic !mf','Is there a group that is neither sofic nor MF?','solved',{
+  resolved:{date:'2026-08-24',by:'Sauers (thm:headline for OpenAI’s group); independently Kun–Thom’s group by Eckhardt on 28 August 2026',source:'gaHeadlineLean',witness:'openai'},reviewed:'2026-09-10',
+  note:'Non-soficity of the Leavitt unit group is OpenAI’s (1 August 2026); failure of MF is the group-approximation manuscript (24 August 2026, Lean-verified at the unit group on 7 September). Hyperlinearity of both witnesses remains open.'}),
+ question('tf_nonmf','tf !mf','Is there a torsion-free group that is not MF?','solved',{
+  resolved:{date:'2026-08-26',by:'Sauers (thm:torsion-free, manuscript-level)',source:'groupApproximation',witness:'sauers_q'},reviewed:'2026-09-10',
+  note:'The witness is a small-cancellation quotient of Fournier-Facio’s torsion-free Kazhdan group. The Lean statement is conditional on the cited literature inputs.'}),
  // Excluded by theorems recorded as rules.
  question('simple_rf','simple rf !finite','Is there an infinite simple residually finite group?','impossible',{
   obstruction:{source:'elementary'},

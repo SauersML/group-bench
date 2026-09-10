@@ -26,7 +26,8 @@ test('dated deductions stay within established group signatures and retain suppo
  assert.equal(sauers.get('!amenable').date,'2026-08-24');
  assert.equal(sauers.get('hyperlinear').date,'2026-08-24');
  assert.equal(dates.find(s=>s.group.id==='grigorchuk98').facts.get('mf').date,'2015-09-28','Later theorems delay derived facts.');
- assert.ok(compareDates(pairs.get(['!mf','sofic'].sort().join(',')).date,'2026-08-24')===0);
+ assert.ok(compareDates(pairs.get(['!mf','sofic'].sort().join(',')).date,'2026-08-14')===0,'The Clifford witness W is dated by its 14 August 2026 commits; the Palomar record follows on 24 August.');
+ assert.equal(pairs.get(['!mf','!sofic'].sort().join(',')).date,'2026-08-24');
 });
 test('date precision preserves conservative temporal order',()=>{
  assert.equal(dateBoundary('1980'),'1980-12-31');assert.equal(dateBoundary('1980-02'),'1980-02-29');

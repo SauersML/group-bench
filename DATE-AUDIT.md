@@ -159,3 +159,34 @@ coverage for deduction paths. 1,623 solved signed pairs still have no dated
 certificate. Closing them responsibly means theorem-by-theorem research on the
 remaining undated implications, or finding alternative dated derivations — not
 assigning dates to structural steps.
+
+
+## Additions of 10 September 2026
+
+The integration of the group-approximation pass (issues #1–#9) added 49
+witnesses and 39 rules. Their dates follow the same rules as above:
+
+- The Sauers witnesses W and Q, and the simplicity and non-MF facts on OpenAI’s
+  Leavitt unit group, are dated by public commits of the group-approximation
+  repository (12–14 August 2026 for W; 24 August 2026 for the unit-group facts;
+  26 August 2026 for Q), with the Lean status stated on each record. These are
+  repository dates, not publication dates, and they are labelled as such.
+- Finite generation and property (T) of the Leavitt unit group are dated to
+  OpenAI’s 1 August 2026 chapter, where they are stated; perfectness and finite
+  generation to Khanh–Thanh’s July 2026 preprint (month precision only).
+- Eckhardt’s non-MF theorem for lamp groups is dated 28 August 2026 (arXiv v1).
+- Classical witnesses carry the year of the located original construction or
+  property proof (Hall 1959, Baumslag–Solitar 1962, Stallings 1963, Baumslag
+  1969, Miller 1971, Ol’shanskii 1980, Kharlampovich 1981, Promislow 1988,
+  Bestvina–Brady 1997, Burger–Mozes 2000) or the month of the located preprint
+  (Le Boudec 2015-07, Lodha–Moore 2013-08, Le Boudec–Matte Bon 2016-05,
+  Szymik–Wahl 2014-11, Hyde–Lodha 2018-07, Tholozan–Tsouvalas 2022-07-29,
+  Titz Mite–Witzel 2025-09, Navas 2005-08).
+- Synthetic witnesses (sums, products, acyclic overgroups, divisible closures)
+  and elementary examples keep `firstProof: null`; where a synthetic witness
+  inherits a dated fact from a named factor, that fact is dated by the factor’s
+  source.
+- Eleven of the new rules are dated (Vershik–Gordon 1997, Korchagin 2017-04,
+  Chou 1980, Witte Morris 2006-06, Sela 1999, Tits 1972, Adams–Ballmann 1998,
+  Gersten–Short 1991, Formanek 1976, Auslander 1967); the rest are structural
+  or cite textbooks and stay undated.

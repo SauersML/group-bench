@@ -29,7 +29,10 @@ GitHub Pages publishes automatically on pushes to `main`.
 
 Black borders identify documented open questions, with complete hypotheses and dated sources.
 The [9 September 2026 literature review](RESEARCH.md) covers the open questions, recent August papers,
-and the five examples added during the review. `questions.mjs` matches equivalent
+and the five examples added during the review; its second part records the
+10 September 2026 integration of the group-approximation pass, which added
+39 sourced implication rules, facts on fifteen existing witnesses, and 49
+new witnesses, taking the catalog from 1,032 to 193 unresolved pairs. `questions.mjs` matches equivalent
 conjunctions, including filters and repeated diagonal literals, and also records
 formerly open questions with their answers and questions excluded by theorems
 (see Named questions below).
@@ -47,6 +50,15 @@ formerly open questions with their answers and questions excluded by theorems
   rank zero and countably infinite rank. Growth and decision-problem axes
   explicitly include finite generation. Integral coefficients are fixed on
   the homological axes. MF is the group property.
+- C*-simplicity is read literally: the reduced C*-algebra of the trivial
+  group is ℂ, which is simple, so the trivial group is C*-simple, and it is the
+  only amenable group that is (de la Harpe). Type F∞ is granted to groups
+  with torsion whenever a finite-index subgroup has a finite classifying
+  space, the same convention under which every finite group is of type F∞.
+- Synthetic witnesses (direct sums, direct products, acyclic overgroups and
+  divisible closures of named groups) are catalogued when a named group with
+  the same profile is not known; their descriptions say which named group
+  they are built from and which embedding theorem is used.
 
 `data.mjs` contains definitions, sources, witnessed facts, and implication rules. Negative literals use `!property_id`.
 Every rule is a conjunction of signed premises implying one signed conclusion.
@@ -87,6 +99,16 @@ The Sauers example pins PALOMAR-2026-08-24-000006 v1, the source commit, compare
 theorem, verification time, statement, proof, and machine-readable registry
 record. It witnesses finitely presented + sofic + not MF, and therefore also
 hyperlinear + not MF via the separately sourced sofic ⇒ hyperlinear theorem.
+Two further Sauers witnesses come from the group-approximation manuscript:
+the Clifford lamp group W (sofic, not MF, with a central involution; dated
+by its 14 August 2026 commits, Lean-verified statement) and the torsion-free
+Kazhdan group Q (manuscript-level; its Lean statement is conditional on the
+cited Fournier-Facio and Hull inputs). The same manuscript supplies the
+simplicity and non-MF facts on OpenAI’s Leavitt unit group, dated 24 August
+2026 by commit; finite generation and property (T) of that group are stated
+in OpenAI’s Chapter 3 and perfectness is Khanh–Thanh’s, and the record says so.
+Eckhardt’s independent preprint of 28 August 2026 dates the non-MF fact on
+the Kun–Thom witness.
 
 `DATE-AUDIT.md` records the September 2026 dating pass: what each date rests on,
 which submitted dates were reduced in precision or repointed to a different
@@ -120,10 +142,13 @@ excluded entries match their requirements exactly.
 The current assessment covers the Burnside problems and their finitely
 presented forms, Milnor’s growth problem, Day’s and von Neumann’s amenability
 problems, finitely presented simple amenable and divisible groups, Gromov’s
-residual-finiteness question for hyperbolic groups, residually finite torsion
-Kazhdan groups, non-Hopfian Kazhdan groups, and the non-sofic questions,
-including the finitely presented and torsion-free forms answered in August
-2026. Questions whose properties are not axes of this atlas (Tarski monsters,
+residual-finiteness question for hyperbolic groups, Pestov’s question whether
+every hyperlinear group is sofic and Ozawa’s whether every hyperbolic group
+is sofic (both open), residually finite torsion Kazhdan groups, non-Hopfian
+Kazhdan groups, the non-sofic questions, including the finitely presented and
+torsion-free forms answered in August 2026, and the non-MF questions
+(a non-MF group, a group neither sofic nor MF, a torsion-free non-MF group),
+all answered in August 2026. Questions whose properties are not axes of this atlas (Tarski monsters,
 Noetherian groups, unitarisable groups, groups isomorphic to their square,
 finitely many conjugacy classes, Scott sentences, type F) are not recorded.
 

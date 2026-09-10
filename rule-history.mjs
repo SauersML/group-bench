@@ -80,8 +80,22 @@ export const ruleHistory=[
  dateRule('hyp','conjugacy','2005-10','ggt','Located in the cited Bowditch course notes; source-publication upper bound.'),
  dateRule('cat0','fp','2005-10','ggt','Located in the cited Bowditch course notes; source-publication upper bound.'),
  dateRule('fg rf exponent','finite','1991','zelmanov1991','Restricted Burnside problem: odd exponents in 1990 and 2-groups in 1991, with the Hall–Higman reduction and the classification of finite simple groups.',['zelmanov1990']),
+ // Added 10 September 2026.
+ dateRule('lea','mf','2017-04','mf','Propositions 5 and 7 (locality with fixed separation) with Theorem 9 (amenable groups are MF).'),
+ dateRule('linear','lef','1997','vershik1997','Local finite models from Mal’cev’s theorem on finitely generated linear groups.'),
+ dateRule('ea subexp','vnilpotent','1980','chou1980','Elementary amenable groups have polynomial or exponential growth.',['gromov1981']),
+ dateRule('lo amenable','li','2006-06','morris2006','Theorem 1.2.'),
+ dateRule('hyp tf','hopfian','1999','sela1999','The Hopf property for torsion-free hyperbolic groups.'),
+ dateRule('linear subexp','poly_growth','1972','tits1972','Tits alternative with Milnor–Wolf.'),
+ dateRule('cat0 amenable','vabelian','1998','adamsBallmann1998','Amenable groups of isometries of Hadamard spaces.'),
+ dateRule('biautomatic','conjugacy','1991','gerstenShort1991','Rational subgroups of biautomatic groups.'),
+ dateRule('polycyclic','conjugacy','1976','formanek1976','Conjugate separability in polycyclic groups.'),
+ dateRule('polycyclic','linear','1967','auslander1967','Polycyclic-by-finite groups are ℤ-linear.'),
+ dateRule('locfinite','lef','1997','vershik1997','Finite subsets of locally finite groups lie in finite subgroups.'),
 ];
 // These are logical/definitional steps only. They can carry a dated proof
 // forward, but do not receive fabricated original publication dates themselves.
 const structuralIds=new Set(['r7','r8','r9','r10','r27','r28','r29','r40','r41','r42','r43','r44','r45','r46','r48','r49','r50','r61','r62','r63','r64','r66','r67','r68','r69','r70','r71','r72','r73','r74','r76','r82','r109','r119','r120','r122']);
+// Rules added on 10 September 2026 with an elementary source are structural too.
+for(const r of rules)if(Number(r.id.slice(1))>122&&r.source==='elementary')structuralIds.add(r.id);
 export const structuralRules=rules.filter(r=>structuralIds.has(r.id));
