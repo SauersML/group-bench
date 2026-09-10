@@ -332,6 +332,9 @@ add('ea subexp','vnilpotent','Chou: a finitely generated elementary amenable gro
 add('simple !finite','!vnilpotent','An infinite simple group has no proper finite-index subgroup, and a nontrivial nilpotent group has nontrivial centre, so it would be abelian and hence finite.','robinson');
 add('nilpotent centerless','trivial','A nontrivial nilpotent group has nontrivial centre.','robinson');
 add('biautomatic','conjugacy','Biautomatic groups have a decidable conjugacy problem (Gersten–Short; Epstein et al., Theorem 2.5.7). This does not extend to automatic groups.','gerstenShort1991');
+add('cat0 solvable','vabelian','Bridson–Haefliger’s solvable subgroup theorem: a solvable subgroup of a group acting properly cocompactly on a CAT(0) space is finitely generated and virtually abelian.','bridsonHaefliger');
+add('biautomatic polycyclic','vabelian','Every polycyclic subgroup of a biautomatic group is virtually abelian.','gerstenShort1991');
+add('automatic vnilpotent','vabelian','Every virtually nilpotent subgroup of an automatic group is virtually abelian.','epstein1992');
 add('cat0','conjugacy','A proper cocompact action on a CAT(0) space makes the group semihyperbolic, and semihyperbolic groups have a soluble conjugacy problem (Alonso–Bridson).','alonsoBridson1995');
 add('cat0','word','A proper cocompact action on a CAT(0) space gives a quadratic isoperimetric inequality, hence a decidable word problem.','bridsonHaefliger');
 add('hyp','finfty','The Rips complex is a contractible finite-dimensional complex with a proper cocompact action.','bridsonHaefliger');
