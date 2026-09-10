@@ -74,9 +74,11 @@ is used by Group Bench itself.
 `history.mjs` requires an explicit provenance record for every group. Its
 `firstProof` is the earliest proof source established for that exact example
 in this catalog, with a `dateKind` explaining whether it is a construction,
-publication, reported historical date, preprint, or registered formal proof.
+publication, reported historical date, preprint, registered formal proof, or a
+located exposition standing only as a historical upper bound.
 Use `null` when that date has not been established; preserve year/month/day
-precision instead of manufacturing January 1 dates. `milestones` associate
+precision instead of manufacturing January 1 dates. A publisher placeholder day
+on a month-only issue, or an issue number, is not a month or a day. `milestones` associate
 later proof dates and sources with specific signed facts. Unknown fact dates
 are displayed explicitly, and construction dates are never inherited as proof
 dates for every property. Historical priority claims carry attribution.
@@ -85,6 +87,10 @@ The Sauers example pins PALOMAR-2026-08-24-000006 v1, the source commit, compare
 theorem, verification time, statement, proof, and machine-readable registry
 record. It witnesses finitely presented + sofic + not MF, and therefore also
 hyperlinear + not MF via the separately sourced sofic ⇒ hyperlinear theorem.
+
+`DATE-AUDIT.md` records the September 2026 dating pass: what each date rests on,
+which submitted dates were reduced in precision or repointed to a different
+source, and which rules are deliberately left undated.
 
 ## Named questions
 
