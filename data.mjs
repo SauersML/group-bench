@@ -1,5 +1,19 @@
 // All statements concern countable discrete groups. Missing facts are unknown.
 export const sources = {
+ ff2026:{"title": "Fournier-Facio — A torsion-free non-sofic group (3 August 2026), Theorem 1.3 and §2", "url": "https://arxiv.org/html/2608.02025v1"},
+ ff2026revision:{"title": "Fournier-Facio — revised note (14 August 2026)", "url": "https://arxiv.org/abs/2608.02025v2"},
+ kunThom2026:{"title": "Kun–Thom — Nonsofic wreath products of residually finite groups (20 August 2026 revision), Theorems A and E", "url": "https://arxiv.org/html/2608.06222v3"},
+ fisherLodha2026:{"title": "Fisher–Lodha — A note on normal generation and the first ℓ²-Betti number (26 August 2026)", "url": "https://arxiv.org/html/2608.25988v1"},
+ alekseevThom2026:{"title": "Alekseev–Thom — Centralizers of sofic approximations of Kazhdan groups (5 August 2026), Open problem 6.1", "url": "https://arxiv.org/html/2608.05362v1"},
+ learyMinasyan2019:{"title": "Leary–Minasyan — Commensurating HNN-extensions: non-positive curvature and biautomaticity (8 July 2019), Example 9.4", "url": "https://arxiv.org/pdf/1907.03515v1"},
+ thom2008:{"title": "Thom — Examples of hyperlinear groups without factorization property (13 October 2008)", "url": "https://arxiv.org/abs/0810.2180v1"},
+ rees2022:{"title": "Rees — The development of the theory of automatic groups (30 May 2022), §6", "url": "https://arxiv.org/pdf/2205.14911"},
+ hyperlinearQuestion:{"title": "Taller–Vidick — Approximating the quantum value of an LCS game is RE-hard (30 July 2025), Introduction", "url": "https://arxiv.org/html/2507.22444v1"},
+ rfCat0Question:{"title": "Shepherd–Valiunas — Higher-rank GBS groups: non-positive curvature and biautomaticity (8 September 2025), Introduction", "url": "https://doi.org/10.1007/s10711-025-01037-y"},
+ orderTQuestion:{"title": "Cornulier — Property FW and 1-dimensional piecewise groups (22 November 2020), Proposition 3.3", "url": "https://www.normalesup.org/~cornulier/FW_piecewise_short.pdf"},
+ torsionQuestion:{"title": "Haettel–Osajda — Locally elliptic actions, torsion groups, and nonpositively curved spaces (11 July 2025 revision), §2.2(IX)", "url": "https://arxiv.org/html/2110.12431v3"},
+ zaremskyQuestions:{"title": "Zaremsky — Some open problems (12 July 2026), §1, problems 10–12", "url": "https://zaremsky.github.io/open_problems.pdf"},
+
  openaiNonsofic:{title:'OpenAI — Nonsofic groups exist, Ten Advances, Chapter 3 (1 August 2026, original manuscript)',url:'https://cdn.openai.com/pdf/ten-proofs-oai-original.pdf'},
  openaiAnnouncement:{title:'OpenAI — Ten advances in mathematics and theoretical computer science (1 August 2026)',url:'https://openai.com/index/ten-advances-in-mathematics/'},
  growthQuestion:{title:'Babenko–Sabourau — Minimal volume entropy and fiber growth (2025), §2.8',url:'https://jep.centre-mersenne.org/item/10.5802/jep.295.pdf'},
@@ -204,11 +218,10 @@ export const groups = [
  g('nekrashevych','Nekrashevych’s simple torsion group','N','An infinite finitely generated simple torsion group of intermediate growth containing the first Grigorchuk group.','!finite fg simple torsion intermediate !exponent','nekrashevych'),
  g('openai','OpenAI’s non-sofic Leavitt unit group','L₂×','The countable unit group of the binary Leavitt algebra L_F₂(1,2). OpenAI’s Chapter 3 proves that this group is not sofic.','!sofic','openaiNonsofic'),
  g('sauers','Sauers’ sofic non-MF group','E','The explicit finitely presented group in Palomar record PALOMAR-2026-08-24-000006 v1. The pinned theorem proves soficity and failure of the CDE operator-norm MF property.','fp sofic !mf','palomar'),
+ g("fournier_facio","Fournier-Facio’s torsion-free non-sofic group","Gₜ","The quotient G constructed in §2 is finitely presented, torsion-free, has property (T), and is not sofic.","fp tf t !sofic","ff2026"),
+ g("kun_thom","Kun–Thom’s non-sofic wreath product","W","W = (⊕_{G/Γ} C₂) ⋊ G, with Γ = EL₃(F₂[x₁,x₂,x₃]) and G = EL₃(F₂[x₁±¹,x₂±¹,x₃±¹]) ⋊ SL₃(ℤ), as in Theorem E. The lamp subgroup gives elements of order two.","fg !sofic !tf","kunThom2026"),
+ g("fisher_lodha","Fisher–Lodha’s locally free group Γ₁","Γ₁","The n = 1 construction has first ℓ²-Betti number one and normal rank one. It is countable and locally free, hence locally indicable and torsion-free, but not finitely generated.","tf li !fg","fisherLodha2026"),
+ g("thom_lef","Thom’s LEF Kazhdan group","Tₗ","Thom’s first example is locally embeddable in finite groups, has property (T), and is not residually finite.","lef t !rf","thom2008"),
+ g("leary_minasyan","Leary–Minasyan’s group G₁,₂","G₁,₂","The group ⟨a,b,t | [a,b] = 1, tat⁻¹ = b, tb²t⁻¹ = a⁻²b⟩ in Example 9.4 is CAT(0) and not biautomatic. As an HNN extension of ℤ² it is torsion-free.","cat0 !biautomatic tf","learyMinasyan2019"),
  g('thompson','Thompson’s group F','F','Piecewise-linear dyadic homeomorphisms of the unit interval. Amenability is deliberately not assigned here.','!finite fp finfty tf !abelian !ea !rf !f2 bo exp !simple','thompson')
-];
-
-// Context for exact pair queries; these notes do not supply mathematical certificates.
-export const notableQuestions = [
- {pair:['fp','intermediate'],question:'Can a finitely presented group have intermediate growth?',note:'A longstanding open question on group growth, stated as open in the cited 2025 paper.',source:'growthQuestion'},
- {pair:['hyp','!rf'],question:'Is every hyperbolic group residually finite?',note:'This cell asks for a counterexample to Gromov’s residual-finiteness question, stated as open in the cited 2025 paper.',source:'hyperbolicQuestion'}
 ];

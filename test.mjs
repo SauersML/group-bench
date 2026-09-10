@@ -21,7 +21,7 @@ test('named deep intersections have real witnesses',()=>{
 test('multi-premise implications preserve all hypotheses and contrapositives',()=>{
  assert.equal(classify(['fp','lef','!rf']).status,'impossible');
  assert.equal(classify(['fp','!rf']).status,'exists');
- assert.equal(classify(['lef','!rf']).status,'unresolved');
+ assert.equal(classify(['lef','!rf']).status,'exists');
  assert.ok(propagate(['lef','!rf']).facts.has('!fp'));
  assert.equal(classify(['t','amenable','!finite']).status,'impossible');
  assert.equal(classify(['finite','tf','!trivial']).status,'impossible');
@@ -92,4 +92,39 @@ test('each example has explicit provenance without invented dates',()=>{
  assert.equal(history.sauers.firstProof,'2026-08-24');assert.equal(history.sauers.formal.version,1);
  assert.equal(history.grigorchuk.firstProof,'1980');
  assert.ok(history.grigorchuk.milestones.some(m=>m.date==='1984'&&m.facts.includes('intermediate')));
+});
+
+import {openQuestions,openQuestion} from './questions.mjs';
+test('documented open questions retain complete hypotheses and dated primary sources',()=>{
+ assert.equal(new Set(openQuestions.map(q=>q.id)).size,openQuestions.length);
+ for(const q of openQuestions){
+  assert.ok(sources[q.source]?.url,q.id);
+  assert.match(q.reviewed,/^\d{4}-\d{2}-\d{2}$/);
+  assert.ok(q.sourceDate<=q.reviewed);
+  assert.equal(classify(q.requirements).status,'unresolved',q.id);
+  assert.equal(openQuestion(q.requirements)?.id,q.id);
+ }
+ assert.equal(openQuestion(['!hyperlinear','!hyperlinear'])?.id,'nonhyperlinear');
+ assert.equal(openQuestion(['hyp','!lef'])?.id,'hyperbolic_rf');
+ assert.equal(openQuestion(['fp','intermediate','fg'])?.id,'fp_growth');
+ assert.equal(openQuestion(['fp','intermediate','simple']),undefined);
+ assert.equal(openQuestion(['lo','t']),undefined);
+ assert.equal(openQuestion(['lo','t','!trivial'])?.id,'ordered_kazhdan');
+ assert.equal(openQuestion(['fp','torsion']),undefined);
+ assert.equal(openQuestion(['fp','simple','amenable']),undefined);
+ assert.equal(openQuestion(['sofic','t','!rf']),undefined);
+ assert.equal(openQuestion(['fp','sofic','t','!rf'])?.id,'fp_sofic_kazhdan');
+ for(const query of [['!sofic'],['!mf'],['cat0','!biautomatic'],['fp','lef','!rf']])assert.equal(openQuestion(query),undefined);
+});
+test('recent and historical additions certify only their recorded group properties',()=>{
+ for(const [id,query] of [['fournier_facio',['fp','tf','t','!sofic']],['kun_thom',['fg','!sofic','!tf']],['fisher_lodha',['li','tf','!fg']],['thom_lef',['lef','t','!rf']],['leary_minasyan',['cat0','!biautomatic','tf']]]){
+  assert.ok(classify(query).witnesses.some(g=>g.id===id));
+  assert.ok(history[id].milestones.some(m=>query.every(lit=>m.facts.includes(lit))));
+ }
+ for(const id of ['fournier_facio','kun_thom']){
+  const s=signatures.find(g=>g.group.id===id);
+  for(const lit of ['mf','!mf','hyperlinear','!hyperlinear'])assert.ok(!s.facts.has(lit),`${id}: ${lit}`);
+ }
+ assert.equal(history.kun_thom.firstProof,'2026-08-20');
+ assert.equal(history.fisher_lodha.firstProof,'2026-08-26');
 });

@@ -1,4 +1,5 @@
-import {properties,groups,sources,notableQuestions} from './data.mjs';
+import {properties,groups,sources} from './data.mjs';
+import {openQuestion} from './questions.mjs';
 import {history as groupHistory,formatDate} from './history.mjs';
 import {datedSignatures} from './timeline.mjs';
 const datedGroups=new Map(datedSignatures().map(s=>[s.group.id,s.facts]));
@@ -9,7 +10,6 @@ const defaultProperties=['fp','intermediate','hyp','rf','!rf','amenable','!amena
 const state={query:[],properties:[...defaultProperties],cell:null};
 let pickerTarget='properties';
 const activeQuery=()=>[...new Set([...state.query,...(state.cell||[])])];
-const notableQuestion=query=>notableQuestions.find(item=>query.length===2&&item.pair.every(literal=>query.includes(literal)));
 const statusLabel={exists:'Example exists',impossible:'Impossible',unresolved:'Unknown'};
 function sourceHTML(id){const s=sources[id];return s.url?`<a class="source" href="${escape(s.url)}" target="_blank" rel="noopener">${escape(s.title)} ↗</a>`:`<span class="source">${escape(s.title)} · ${escape(s.note)}</span>`;}
 function historyHTML(group){
@@ -81,9 +81,10 @@ function renderMap(){
   for(let colIndex=rowIndex;colIndex<state.properties.length;colIndex++){
    const col=state.properties[colIndex];
    const cell=[row,col],result=classify([...state.query,...cell]);
-   const title=`${cell.map(label).join(' AND ')}: ${statusLabel[result.status]}`;
+   const question=openQuestion([...state.query,...cell]);
+   const title=`${cell.map(label).join(' AND ')}: ${statusLabel[result.status]}${question?' · Open question':''}`;
    const selected=state.cell&&state.cell.join(',')===cell.join(',');
-   html+=`<button style="grid-row:${rowIndex+2};grid-column:${colIndex+2}" class="cell ${result.status} ${selected?'selected':''}" data-cell="${cell.join(',')}" aria-label="${escape(title)}" aria-pressed="${!!selected}">${result.status==='exists'?`<span class="symbol">${escape(result.witnesses[0].symbol)}</span>`:result.status==='impossible'?'Impossible':'Unknown'}</button>`;
+   html+=`<button style="grid-row:${rowIndex+2};grid-column:${colIndex+2}" class="cell ${result.status} ${question?'open-question':''} ${selected?'selected':''}" data-cell="${cell.join(',')}" aria-label="${escape(title)}" aria-pressed="${!!selected}">${result.status==='exists'?`<span class="symbol">${escape(result.witnesses[0].symbol)}</span>`:result.status==='impossible'?'Impossible':'Unknown'}</button>`;
   }
  }
  $('#matrix').innerHTML=html;
@@ -105,8 +106,8 @@ function renderEvidence(){
   html+='<ol class="proof-list">'+proof.steps.map(step=>`<li><strong>${step.literal?escape(label(step.literal)):escape(step.rule.when.map(label).join(' AND '))+' ⇒ '+escape(label(step.rule.then))}</strong><br>${escape(step.rule.reason)}${sourceHTML(step.rule.source)}</li>`).join('')+'</ol>';
   if(!proof.steps.length)html+='<p class="detail-copy">The same property is both required and excluded.</p>';
  }else{
-  const question=notableQuestion(query);
-  html+=question?`<p class="detail-copy"><strong>${escape(question.question)}</strong><br>${escape(question.note)}</p>${sourceHTML(question.source)}`:'<p class="detail-copy">No matching example or impossibility proof is recorded. This does not necessarily mean an open problem.</p>';
+  const question=openQuestion(query);
+  html+=question?`<p class="detail-copy"><strong>${escape(question.question)}</strong><br>${escape(question.note)}</p><p class="source">Open question · Source ${escape(formatDate(question.sourceDate))} · Reviewed ${escape(formatDate(question.reviewed))}</p>${sourceHTML(question.source)}`:'<p class="detail-copy">No matching example or impossibility proof is recorded. This does not necessarily mean an open problem.</p>';
  }
  if(result.status!=='impossible'){
   const inferred=[...result.closure.facts.keys()].filter(lit=>!query.includes(lit));
@@ -147,8 +148,8 @@ function showHover(anchor){
    const step=proof.steps.at(-1);
    html+=step?`<p>${escape(step.rule.reason)}</p><small>Source: ${escape(sources[step.rule.source].title)}</small>`:'<p>A property and its negation cannot both hold.</p>';
   }else{
-   const question=notableQuestion(query);
-   html+=question?`<p><strong>${escape(question.question)}</strong></p><p>${escape(question.note)}</p><small>Source: ${escape(sources[question.source].title)}</small>`:'<p>No matching example or impossibility proof is recorded.</p>';
+   const question=openQuestion(query);
+   html+=question?`<p><strong>${escape(question.question)}</strong></p><p>${escape(question.note)}</p><p>Open question · Reviewed ${escape(formatDate(question.reviewed))}</p><small>Source: ${escape(sources[question.source].title)}</small>`:'<p>No matching example or impossibility proof is recorded.</p>';
   }
   html+='<p class="hover-hint">Click the cell for full evidence and source links.</p>';
  }

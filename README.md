@@ -27,6 +27,11 @@ Run `python3 serve.py` for a local preview. Run `python3 build.py` to validate
 and build the static website into `dist/`. The build runs the Node test suite.
 GitHub Pages publishes automatically on pushes to `main`.
 
+Black borders identify documented open questions, with complete hypotheses and dated sources.
+The [9 September 2026 literature review](RESEARCH.md) covers 13 questions, recent August papers,
+and the five examples added during the review. `questions.mjs` matches equivalent
+conjunctions, including filters and repeated diagonal literals.
+
 ## Mathematical contract
 
 - **Exists** requires a named witness with every selected literal established.
@@ -35,7 +40,7 @@ GitHub Pages publishes automatically on pushes to `main`.
   declaration of an open problem, and Boolean satisfiability is not existence.
 - Missing group facts remain unknown; no closed-world assumption is made.
 - Sources are mathematical references. The Sauers example also links to a pinned
-  Palomar-verified result; the atlas’s own deductions are not Lean certificates.
+  Palomar-verified result; Group Bench’s own deductions are not Lean certificates.
 - All groups are countable and discrete. Simple means nontrivial. Free allows
   rank zero and countably infinite rank. Growth and decision-problem axes
   explicitly include finite generation. Integral coefficients are fixed on
@@ -59,7 +64,7 @@ check each witness for consistency, check nontrivial intersections, compare
 DPLL with exhaustive truth tables, and prevent unknown facts becoming false.
 
 The URL fragment contains the selected signed properties, shared property selection, and selected intersection. No account, tracking, or persistent storage
-is used by the atlas itself.
+is used by Group Bench itself.
 
 ## Dates and priority
 
@@ -87,7 +92,7 @@ grid never change this denominator. The step line chart always runs from 0 to 10
 spacing: reversed log(1 + years before the right endpoint) expands recent dates,
 and log(1 + percentage) expands low percentages while preserving zero.
 The labeled right endpoint is at least the start of next year. The plot spans the content width on a white background and uses a pure
-step line without markers. Hover by date, or focus the line and use arrow keys, to
+6-pixel step line without markers. Chart labels remain 16 pixels at every viewport width. Hover by date, or focus the line and use arrow keys, to
 inspect dated observations; click or press Enter to open their sources. Horizontal segments
 keep the cumulative total constant between recorded dates; vertical segments show
 newly dated pairs at each date. Axis explanations are in How it works and hover
