@@ -85,7 +85,7 @@ export const ruleHistory=[
  dateRule('linear','lef','1997','vershik1997','Local finite models from Mal’cev’s theorem on finitely generated linear groups.'),
  dateRule('ea subexp','vnilpotent','1980','chou1980','Elementary amenable groups have polynomial or exponential growth.',['gromov1981']),
  dateRule('lo amenable','li','2006-06','morris2006','Theorem 1.2.'),
- dateRule('hyp tf','hopfian','1999','sela1999','The Hopf property for torsion-free hyperbolic groups.'),
+ dateRule('hyp','hopfian','2019','reinfeldtWeidmann2019','Sela proved the torsion-free case in 1999; the hypothesis was removed once every hyperbolic group was shown equationally noetherian.',['sela1999']),
  dateRule('linear subexp','poly_growth','1972','tits1972','Tits alternative with Milnor–Wolf.'),
  dateRule('cat0 amenable','vabelian','1998','adamsBallmann1998','Amenable groups of isometries of Hadamard spaces.'),
  dateRule('biautomatic','conjugacy','1991','gerstenShort1991','Rational subgroups of biautomatic groups.'),
