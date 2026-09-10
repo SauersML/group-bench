@@ -28,20 +28,37 @@ async function renderProgress(){
   for(const n of candidates)if((!years.length||xYear(n)-xYear(years.at(-1))>=52)&&right-xYear(n)>=52)years.push(n);
   years.push(last);
   const xticks=years.map(n=>`<text x="${xYear(n)}" y="230" text-anchor="middle">${n}</text>`).join('');
-  const dots=data.series.map((event,i)=>`<circle cx="${x(event.date)}" cy="${y(event.cumulative)}" r="5" tabindex="0" role="button" data-event="${i}" aria-label="${escape(formatDate(event.date))}: ${event.cumulative} pairs solved, ${percent(event.cumulative,data.total)}"><title>${escape(formatDate(event.date))}: ${event.pairs.length} newly dated pairs; ${event.cumulative} cumulative (${percent(event.cumulative,data.total)})</title></circle>`).join('');
-  $('#progress-plot').innerHTML=`<svg viewBox="0 0 960 244" role="group" aria-labelledby="chart-title chart-description"><title id="chart-title">Pairs solved over time</title><desc id="chart-description">Line plot with logarithmic spacing on both axes: log(1 + years before ${last}) reversed for chronological order, and log(1 + percentage). Zero to one hundred percent, out of ${data.total} pairs. The curve reaches ${data.dated} dated pairs, ${percent(data.dated,data.total)}. ${data.undated} solved pairs have no established date.</desc>${ticks}${xticks}<path d="${path}" class="chart-line"/>${dots}</svg><p class="progress-scale" title="Time: reversed log(1 + years before ${last}). Percentage: log(1 + percentage), so zero stays visible.">Logarithmic axes · recent years and lower percentages expanded.</p><p id="progress-detail">Hover over a point for its proof date. Select it to see the pairs and sources.</p>`;
+  $('#progress-plot').innerHTML=`<svg viewBox="0 0 960 244" role="group" aria-labelledby="chart-title chart-description"><title id="chart-title">Pairs solved over time</title><desc id="chart-description">Line plot with logarithmic spacing on both axes: log(1 + years before ${last}) reversed for chronological order, and log(1 + percentage). Zero to one hundred percent, out of ${data.total} pairs. The curve reaches ${data.dated} dated pairs, ${percent(data.dated,data.total)}. ${data.undated} solved pairs have no established date.</desc>${ticks}${xticks}<path d="${path}" class="chart-line" tabindex="0" role="slider" aria-label="Proof date; use arrow keys to explore, Enter for sources" aria-valuemin="0" aria-valuemax="${Math.max(0,data.series.length-1)}" aria-valuenow="${Math.max(0,data.series.length-1)}"/></svg><p class="progress-scale" title="Time: reversed log(1 + years before ${last}). Percentage: log(1 + percentage), so zero stays visible.">Logarithmic axes · recent years and lower percentages expanded.</p><p id="progress-detail">Hover along the line for proof dates. Click for pairs and sources.</p>`;
   function renderRecords(){
    if($('#progress-table').dataset.loaded)return;
   $('#progress-table').innerHTML='<table><thead><tr><th>Proof date</th><th>Pair</th><th>Example and sources</th></tr></thead><tbody>'+data.series.flatMap((event,i)=>event.pairs.map((proof,j)=>`<tr ${j===0?`id="proof-event-${i}"`:''}><td>${escape(proof.kind)}<br>${escape(formatDate(proof.date))}</td><td><button data-pair="${proof.pair.join(',')}">${escape(proof.pair.map(label).join(' AND '))}</button></td><td>${proof.group?escape(groups.find(g=>g.id===proof.group).name):'Impossible'}${proof.sources.map(id=>`<a href="${escape(sources[id].url)}" target="_blank" rel="noopener">${escape(sources[id].title)} ↗</a>`).join('')}${proof.rules.length?`<details><summary>Proof steps</summary>${proof.rules.map(id=>{const rule=rules.find(r=>r.id===id);return `<p>${escape(rule.when.map(label).join(' AND '))} ⇒ ${escape(label(rule.then))}<br>${escape(rule.reason)}</p>`;}).join('')}</details>`:''}</td></tr>`)).join('')+'</tbody></table>';
    $('#progress-table').dataset.loaded='true';
   }
   $('#progress-records').addEventListener('toggle',()=>{if($('#progress-records').open)renderRecords();});
-  const describe=target=>{const event=data.series[Number(target.dataset.event)];$('#progress-detail').textContent=`${formatDate(event.date)} · ${event.pairs.length} newly dated pairs · ${event.cumulative} / ${number(data.total)} (${percent(event.cumulative,data.total)})`;};
-  const reveal=target=>{describe(target);$('#progress-records').open=true;renderRecords();$(`#proof-event-${target.dataset.event}`).scrollIntoView({block:'nearest'});};
-  $('#progress-plot').addEventListener('pointerover',e=>{if(e.target.dataset.event!==undefined)describe(e.target);});
-  $('#progress-plot').addEventListener('focusin',e=>{if(e.target.dataset.event!==undefined)describe(e.target);});
-  $('#progress-plot').addEventListener('click',e=>{if(e.target.dataset.event!==undefined)reveal(e.target);});
-  $('#progress-plot').addEventListener('keydown',e=>{if(e.target.dataset.event!==undefined&&['Enter',' '].includes(e.key)){e.preventDefault();reveal(e.target);}});
+  const plot=$('#progress-plot svg'),line=$('.chart-line');
+  let selected=Math.max(0,data.series.length-1);
+  const describe=()=>{
+   const event=data.series[selected];if(!event)return;
+   const description=`${formatDate(event.date)} · ${event.pairs.length} newly dated pairs · ${event.cumulative} / ${number(data.total)} (${percent(event.cumulative,data.total)})`;
+   $('#progress-detail').textContent=description;
+   line.setAttribute('aria-valuenow',selected);line.setAttribute('aria-valuetext',description);
+  };
+  const locate=event=>{
+   const rect=plot.getBoundingClientRect(),position=(event.clientX-rect.left)*960/rect.width;
+   if(position<left||position>right||!data.series.length)return false;
+   selected=data.series.reduce((best,item,i)=>Math.abs(x(item.date)-position)<Math.abs(x(data.series[best].date)-position)?i:best,0);
+   describe();return true;
+  };
+  const reveal=()=>{if(!data.series.length)return;describe();$('#progress-records').open=true;renderRecords();$(`#proof-event-${selected}`).scrollIntoView({block:'nearest'});};
+  plot.addEventListener('pointermove',locate);
+  plot.addEventListener('click',event=>{if(locate(event))reveal();});
+  line.addEventListener('focus',describe);
+  line.addEventListener('keydown',event=>{
+   if(['Enter',' '].includes(event.key)){event.preventDefault();reveal();return;}
+   const offset={ArrowLeft:-1,ArrowDown:-1,ArrowRight:1,ArrowUp:1}[event.key];
+   if(offset!==undefined){event.preventDefault();selected=Math.max(0,Math.min(data.series.length-1,selected+offset));describe();}
+   else if(['Home','End'].includes(event.key)){event.preventDefault();selected=event.key==='Home'?0:Math.max(0,data.series.length-1);describe();}
+  });
   $('#progress-table').addEventListener('click',e=>{
    const button=e.target.closest('[data-pair]');if(!button)return;
    const pair=button.dataset.pair.split(','),params=new URLSearchParams(location.hash.slice(1));

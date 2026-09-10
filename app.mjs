@@ -1,14 +1,15 @@
-import {properties,groups,sources} from './data.mjs';
+import {properties,groups,sources,notableQuestions} from './data.mjs';
 import {history as groupHistory,formatDate} from './history.mjs';
 import {datedSignatures} from './timeline.mjs';
 const datedGroups=new Map(datedSignatures().map(s=>[s.group.id,s.facts]));
 import {byId,label,propertyId,classify,explanation,signatures,witnessProof} from './engine.mjs';
 const $=selector=>document.querySelector(selector);
 const escape=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const defaultProperties=['finite','fp','rf','amenable','sofic','hyperlinear','mf','!mf'];
+const defaultProperties=['fp','intermediate','hyp','rf','!rf','amenable','!amenable','t','sofic','hyperlinear','mf','!mf'];
 const state={query:[],properties:[...defaultProperties],cell:null};
 let pickerTarget='properties';
 const activeQuery=()=>[...new Set([...state.query,...(state.cell||[])])];
+const notableQuestion=query=>notableQuestions.find(item=>query.length===2&&item.pair.every(literal=>query.includes(literal)));
 const statusLabel={exists:'Example exists',impossible:'Impossible',unresolved:'Unknown'};
 function sourceHTML(id){const s=sources[id];return s.url?`<a class="source" href="${escape(s.url)}" target="_blank" rel="noopener">${escape(s.title)} ↗</a>`:`<span class="source">${escape(s.title)} · ${escape(s.note)}</span>`;}
 function historyHTML(group){
@@ -58,9 +59,21 @@ function renderQuery(){
  $('#clear').hidden=!state.query.length;
 }
 function axisHTML(literal,axis){return `<button class="${axis}-name ${literal[0]==='!'?'negative':''}" data-define="${propertyId(literal)}" data-hover-property="${literal}"><span>${escape(label(literal))}</span></button>`;}
+function fitMap(){
+ const matrix=$('#matrix'),width=$('.matrix-scroll').clientWidth-6,n=Math.max(1,state.properties.length);
+ const labelWidth=Math.min(136,Math.max(72,width*.18)),gap=Math.min(3,12/n);
+ const columnWidth=Math.max(1,(width-labelWidth-n*gap)/n);
+ const cellHeight=Math.max(1,Math.min(48,columnWidth,(innerHeight*.72-112-n*gap)/n));
+ matrix.style.setProperty('--label-width',`${labelWidth}px`);
+ matrix.style.setProperty('--cell-size',`${cellHeight}px`);
+ matrix.style.setProperty('--cell-gap',`${gap}px`);
+ matrix.style.setProperty('--axis-font',`${Math.min(12,cellHeight*.6)}px`);
+ matrix.style.setProperty('--cell-font',`${Math.min(9,cellHeight*.35,columnWidth/6)}px`);
+ matrix.style.setProperty('--column-font',`${Math.min(11,columnWidth*.65)}px`);
+}
 function renderMap(){
  $('#property-count').textContent=`${state.properties.length} properties · ${state.properties.length*(state.properties.length+1)/2} cells`;
- $('#matrix').style.gridTemplateColumns=`136px repeat(${Math.max(1,state.properties.length)}, minmax(var(--cell-size), 1fr))`;
+ $('#matrix').style.gridTemplateColumns=`var(--label-width) repeat(${Math.max(1,state.properties.length)}, minmax(0, 1fr))`;
  if(!state.properties.length){$('#matrix').innerHTML='<p class="map-empty">Add a property to start the grid.</p>';return;}
  let html='<div class="corner" aria-hidden="true"></div>'+state.properties.map(lit=>axisHTML(lit,'column')).join('');
  for(const [rowIndex,row] of state.properties.entries()){
@@ -74,6 +87,7 @@ function renderMap(){
   }
  }
  $('#matrix').innerHTML=html;
+ fitMap();
 }
 function renderEvidence(){
  $('#evidence').hidden=!state.cell;
@@ -90,7 +104,10 @@ function renderEvidence(){
   html+=`<p class="detail-copy">These requirements already conflict: <strong>${proof.core.map(lit=>escape(label(lit))).join(' AND ')}</strong>.${proof.byCases?' The following rules exclude every Boolean case.':''}</p>`;
   html+='<ol class="proof-list">'+proof.steps.map(step=>`<li><strong>${step.literal?escape(label(step.literal)):escape(step.rule.when.map(label).join(' AND '))+' ⇒ '+escape(label(step.rule.then))}</strong><br>${escape(step.rule.reason)}${sourceHTML(step.rule.source)}</li>`).join('')+'</ol>';
   if(!proof.steps.length)html+='<p class="detail-copy">The same property is both required and excluded.</p>';
- }else html+='<p class="detail-copy">No matching example or impossibility proof is recorded. This does not necessarily mean an open problem.</p>';
+ }else{
+  const question=notableQuestion(query);
+  html+=question?`<p class="detail-copy"><strong>${escape(question.question)}</strong><br>${escape(question.note)}</p>${sourceHTML(question.source)}`:'<p class="detail-copy">No matching example or impossibility proof is recorded. This does not necessarily mean an open problem.</p>';
+ }
  if(result.status!=='impossible'){
   const inferred=[...result.closure.facts.keys()].filter(lit=>!query.includes(lit));
   if(inferred.length)html+=`<details class="inferences"><summary>${inferred.length} further properties forced by your requirements</summary><div class="facts">${inferred.map(lit=>`<button class="fact ${lit[0]==='!'?'negative':''}" data-inference="${lit}">${escape(label(lit))} ↗</button>`).join('')}</div></details>`;
@@ -129,7 +146,10 @@ function showHover(anchor){
    html+=`<p>Conflicting requirements: ${escape(proof.core.map(label).join(' AND '))}.</p>`;
    const step=proof.steps.at(-1);
    html+=step?`<p>${escape(step.rule.reason)}</p><small>Source: ${escape(sources[step.rule.source].title)}</small>`:'<p>A property and its negation cannot both hold.</p>';
-  }else html+='<p>No matching example or impossibility proof is recorded.</p>';
+  }else{
+   const question=notableQuestion(query);
+   html+=question?`<p><strong>${escape(question.question)}</strong></p><p>${escape(question.note)}</p><small>Source: ${escape(sources[question.source].title)}</small>`:'<p>No matching example or impossibility proof is recorded.</p>';
+  }
   html+='<p class="hover-hint">Click the cell for full evidence and source links.</p>';
  }
  const card=$('#hover-card');card.innerHTML=html;card.hidden=false;anchor.setAttribute('aria-describedby','hover-card');
@@ -157,7 +177,8 @@ $('#matrix').addEventListener('pointerout',event=>{if(!event.relatedTarget?.clos
 $('#hover-card').addEventListener('pointerleave',hideHover);
 $('#matrix').addEventListener('focusin',event=>{const anchor=event.target.closest('[data-cell],[data-hover-property]');if(anchor)showHover(anchor);});
 $('#matrix').addEventListener('focusout',hideHover);
-window.addEventListener('scroll',event=>{if(!$('#hover-card').contains(event.target))hideHover();},true);window.addEventListener('resize',hideHover);
+window.addEventListener('scroll',event=>{if(!$('#hover-card').contains(event.target))hideHover();},true);window.addEventListener('resize',()=>{hideHover();fitMap();});
+new ResizeObserver(fitMap).observe($('.matrix-scroll'));
 document.addEventListener('keydown',event=>{if(event.key==='Escape')hideHover();});
 document.addEventListener('click',event=>{
  const el=event.target.closest('button');if(!el)return;

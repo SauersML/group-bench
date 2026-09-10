@@ -1,5 +1,7 @@
 // All statements concern countable discrete groups. Missing facts are unknown.
 export const sources = {
+ growthQuestion:{title:'Babenko–Sabourau — Minimal volume entropy and fiber growth (2025), §2.8',url:'https://jep.centre-mersenne.org/item/10.5802/jep.295.pdf'},
+ hyperbolicQuestion:{title:'Schesler — Finitely generated infinite torsion groups that are residually finite simple (2025), Introduction',url:'https://doi.org/10.1016/j.aim.2025.110441'},
  bdh1980:{title:'Baumslag–Dyer–Heller — The topology of discrete groups (1980)',url:'https://doi.org/10.1016/0022-4049(80)90040-7'},
  cde2012:{title:'Carrión–Dadarlat–Eckhardt — On groups with quasidiagonal C*-algebras (2012)',url:'https://arxiv.org/abs/1210.4050v1'},
  tww2015:{title:'Tikuisis–White–Winter — Quasidiagonality of nuclear C*-algebras (2015)',url:'https://arxiv.org/abs/1509.08318v1'},
@@ -200,4 +202,10 @@ export const groups = [
  g('nekrashevych','Nekrashevych’s simple torsion group','N','An infinite finitely generated simple torsion group of intermediate growth containing the first Grigorchuk group.','!finite fg simple torsion intermediate !exponent','nekrashevych'),
  g('sauers','Sauers’ sofic non-MF group','E','The explicit finitely presented group in Palomar record PALOMAR-2026-08-24-000006 v1. The pinned theorem proves soficity and failure of the CDE operator-norm MF property.','fp sofic !mf','palomar'),
  g('thompson','Thompson’s group F','F','Piecewise-linear dyadic homeomorphisms of the unit interval. Amenability is deliberately not assigned here.','!finite fp finfty tf !abelian !ea !rf !f2 bo exp !simple','thompson')
+];
+
+// Context for exact pair queries; these notes do not supply mathematical certificates.
+export const notableQuestions = [
+ {pair:['fp','intermediate'],question:'Can a finitely presented group have intermediate growth?',note:'A longstanding open question on group growth, stated as open in the cited 2025 paper.',source:'growthQuestion'},
+ {pair:['hyp','!rf'],question:'Is every hyperbolic group residually finite?',note:'This cell asks for a counterexample to Gromov’s residual-finiteness question, stated as open in the cited 2025 paper.',source:'hyperbolicQuestion'}
 ];
