@@ -3,11 +3,11 @@ import {history as groupHistory,formatDate} from './history.mjs';
 import {byId,label,propertyId,classify,explanation,signatures,witnessProof} from './engine.mjs';
 const $=selector=>document.querySelector(selector);
 const escape=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const defaultAxes=['finite','fp','rf','amenable','sofic','hyperlinear','mf','!mf'];
-const state={query:[],rows:[...defaultAxes],columns:[...defaultAxes],cell:null};
-let pickerTarget='columns';
+const defaultProperties=['finite','fp','rf','amenable','sofic','hyperlinear','mf','!mf'];
+const state={query:[],properties:[...defaultProperties],cell:null};
+let pickerTarget='properties';
 const activeQuery=()=>[...new Set([...state.query,...(state.cell||[])])];
-const statusLabel={exists:'Example exists',impossible:'Impossible',unresolved:'Unknown in this atlas'};
+const statusLabel={exists:'Example exists',impossible:'Impossible',unresolved:'Unknown'};
 function sourceHTML(id){const s=sources[id];return s.url?`<a class="source" href="${escape(s.url)}" target="_blank" rel="noopener">${escape(s.title)} ↗</a>`:`<span class="source">${escape(s.title)} · ${escape(s.note)}</span>`;}
 function historyHTML(group){
  const h=groupHistory[group.id];
@@ -19,20 +19,19 @@ function historyHTML(group){
 }
 function factDateHTML(group,literal){
  const milestones=groupHistory[group.id].milestones.filter(m=>m.facts.includes(literal));
- return milestones.length?milestones.map(m=>`<div class="fact-date">${escape(m.kind)} · ${escape(formatDate(m.date))}${sourceHTML(m.source)}</div>`).join(''):'<span class="source">First proof date of this property is not established in the atlas.</span>';
+ return milestones.length?milestones.map(m=>`<div class="fact-date">${escape(m.kind)} · ${escape(formatDate(m.date))}${sourceHTML(m.source)}</div>`).join(''):'<span class="source">First proof date: unknown.</span>';
 }
 
 function readURL(){
  const params=new URLSearchParams(location.hash.slice(1));
  const literals=key=>[...new Set((params.get(key)||'').split(',').filter(lit=>/^!?[^!]+$/.test(lit)&&byId[propertyId(lit)]))];
  state.query=literals('q');
- state.rows=params.has('rows')?literals('rows'):[...defaultAxes];
- state.columns=params.has('columns')?literals('columns'):[...defaultAxes];
+ state.properties=params.has('properties')?literals('properties'):[...defaultProperties];
  const cell=(params.get('cell')||'').split(',');
- state.cell=cell.length===2&&state.rows.includes(cell[0])&&state.columns.includes(cell[1])?cell:null;
+ state.cell=cell.length===2&&state.properties.includes(cell[0])&&state.properties.includes(cell[1])?cell:null;
 }
 function saveURL(){
- const params=new URLSearchParams({rows:state.rows.join(','),columns:state.columns.join(',')});
+ const params=new URLSearchParams({properties:state.properties.join(',')});
  if(state.query.length)params.set('q',state.query.join(','));
  if(state.cell)params.set('cell',state.cell.join(','));
  window.history.replaceState(null,'',`${location.pathname}${location.search}#${params}`);
@@ -45,8 +44,8 @@ function renderPicker(){
 }
 function openPicker(target){
  hideHover();pickerTarget=target;
- $('#picker-title').textContent=target==='query'?'Filter every cell':`Edit ${target}`;
- $('#picker-help').textContent=target==='query'?'Every cell must satisfy every selected filter. Clear the filters to compare rows and columns alone.':'Choose any properties to show. You can include both versions of a property.';
+ $('#picker-title').textContent=target==='query'?'Filter every cell':'Add properties';
+ $('#picker-help').textContent=target==='query'?'Every cell must satisfy every selected filter. Clear the filters to compare rows and columns alone.':'Each selection appears on both axes. Choose either or both versions.';
  $('#picker-all').hidden=target==='query';
  $('#search').value='';renderPicker();$('#picker').showModal();$('#search').focus();
 }
@@ -54,15 +53,15 @@ function renderQuery(){
  $('#query-chips').innerHTML=state.query.length?state.query.map(lit=>`<span class="chip ${lit[0]==='!'?'negative':''}">${escape(label(lit))}<button data-remove="${lit}" aria-label="Remove ${escape(label(lit))}">×</button></span>`).join(''):'<span class="muted">No extra requirements</span>';
  $('#clear').hidden=!state.query.length;
 }
-function axisHTML(literal,axis){return `<button class="${axis}-name ${literal[0]==='!'?'negative':''}" data-define="${propertyId(literal)}" data-hover-property="${literal}">${escape(label(literal))}</button>`;}
+function axisHTML(literal,axis){return `<button class="${axis}-name ${literal[0]==='!'?'negative':''}" data-define="${propertyId(literal)}" data-hover-property="${literal}"><span>${escape(label(literal))}</span></button>`;}
 function renderMap(){
- $('#row-count').textContent=`(${state.rows.length})`;$('#column-count').textContent=`(${state.columns.length})`;
- $('#matrix').style.gridTemplateColumns=`160px repeat(${Math.max(1,state.columns.length)}, minmax(85px, 1fr))`;
- if(!state.rows.length||!state.columns.length){$('#matrix').innerHTML='<p class="map-empty">Choose at least one row and one column to show the map.</p>';return;}
- let html='<div class="corner">Row AND column</div>'+state.columns.map(lit=>axisHTML(lit,'column')).join('');
- for(const row of state.rows){
+ $('#property-count').textContent=`${state.properties.length} × ${state.properties.length}`;
+ $('#matrix').style.gridTemplateColumns=`136px repeat(${Math.max(1,state.properties.length)}, var(--cell-size))`;
+ if(!state.properties.length){$('#matrix').innerHTML='<p class="map-empty">Add a property to start the grid.</p>';return;}
+ let html='<div class="corner">Row AND column</div>'+state.properties.map(lit=>axisHTML(lit,'column')).join('');
+ for(const row of state.properties){
   html+=axisHTML(row,'row');
-  for(const col of state.columns){
+  for(const col of state.properties){
    const cell=[row,col],result=classify([...state.query,...cell]);
    const title=`${cell.map(label).join(' AND ')}: ${statusLabel[result.status]}`;
    const selected=state.cell&&state.cell.join(',')===cell.join(',');
@@ -75,10 +74,10 @@ function renderEvidence(){
  $('#evidence').hidden=!state.cell;
  if(!state.cell)return;
  const query=activeQuery(), result=classify(query);
- const titles={exists:result.witnesses.length===1?'An example exists.':`${result.witnesses.length} examples match.`,impossible:'This combination is impossible.',unresolved:'Unknown in this atlas.'};
- let html=`<div class="evidence-head"><div><div class="eyebrow">${state.cell?'SELECTED INTERSECTION':'YOUR REGION'}</div><h2 class="evidence-title">${titles[result.status]}</h2></div><span class="status-badge ${result.status}">${result.status}</span></div>`;
+ const titles={exists:result.witnesses.length===1?'An example exists.':`${result.witnesses.length} examples match.`,impossible:'This combination is impossible.',unresolved:'Unknown'};
+ let html=`<div class="evidence-head"><div><div class="eyebrow">SELECTED INTERSECTION</div><h2 class="evidence-title">${titles[result.status]}</h2></div><span class="status-badge ${result.status}">${statusLabel[result.status]}</span></div>`;
  html+=`<div class="evidence-query">${query.map(lit=>`<span>${escape(label(lit))}</span>`).join('')||'<span>No restrictions</span>'}</div>`;
- if(state.cell)html+='<button class="quiet" id="clear-cell">Close evidence</button>';
+ html+='<button class="quiet" id="clear-cell">Close evidence</button>';
  if(result.status==='exists'){
   html+='<div class="witnesses">'+result.witnesses.map((g,i)=>`<details class="witness" ${i===0?'open':''}><summary><span class="group-symbol">${escape(g.symbol)}</span><span>${escape(g.name)}</span></summary><p>${escape(g.description)}</p>${historyHTML(g)}${sourceHTML(g.source)}<div class="facts">${(query.length?query:g.facts.slice(0,7)).map(lit=>`<button class="fact ${lit[0]==='!'?'negative':''}" data-proof="${g.id}|${lit}" title="Show why this property holds">${escape(label(lit))} ↗</button>`).join('')}</div><button class="quiet" data-group="${g.id}">Explore all recorded properties →</button></details>`).join('')+'</div>';
  }else if(result.status==='impossible'){
@@ -86,7 +85,7 @@ function renderEvidence(){
   html+=`<p class="detail-copy">These requirements already conflict: <strong>${proof.core.map(lit=>escape(label(lit))).join(' AND ')}</strong>.${proof.byCases?' The following rules exclude every Boolean case.':''}</p>`;
   html+='<ol class="proof-list">'+proof.steps.map(step=>`<li><strong>${step.literal?escape(label(step.literal)):escape(step.rule.when.map(label).join(' AND '))+' ⇒ '+escape(label(step.rule.then))}</strong><br>${escape(step.rule.reason)}${sourceHTML(step.rule.source)}</li>`).join('')+'</ol>';
   if(!proof.steps.length)html+='<p class="detail-copy">The same property is both required and excluded.</p>';
- }else html+='<p class="detail-copy">The catalog has no example with all these properties, and the recorded theorems do not rule the combination out. This may be a gap in the catalog or a research problem; it is not a claim that a group exists.</p>';
+ }else html+='<p class="detail-copy">No matching example or impossibility proof is recorded. This does not necessarily mean an open problem.</p>';
  if(result.status!=='impossible'){
   const inferred=[...result.closure.facts.keys()].filter(lit=>!query.includes(lit));
   if(inferred.length)html+=`<details class="inferences"><summary>${inferred.length} further properties forced by your requirements</summary><div class="facts">${inferred.map(lit=>`<button class="fact ${lit[0]==='!'?'negative':''}" data-inference="${lit}">${escape(label(lit))} ↗</button>`).join('')}</div></details>`;
@@ -97,7 +96,7 @@ function renderEvidence(){
 function render(){hideHover();renderQuery();renderMap();renderEvidence();saveURL();}
 function openDetail(title,html){
  const dialog=document.createElement('dialog');
- dialog.innerHTML=`<div class="dialog-head"><span class="eyebrow">ATLAS EVIDENCE</span><button aria-label="Close evidence">✕</button></div><h2>${escape(title)}</h2>${html}`;
+ dialog.innerHTML=`<div class="dialog-head"><span class="eyebrow">EVIDENCE</span><button aria-label="Close evidence">✕</button></div><h2>${escape(title)}</h2>${html}`;
  dialog.querySelector('button').onclick=()=>dialog.close();
  dialog.addEventListener('close',()=>dialog.remove());
  document.body.append(dialog);dialog.showModal();
@@ -125,7 +124,7 @@ function showHover(anchor){
    html+=`<p>Conflicting requirements: ${escape(proof.core.map(label).join(' AND '))}.</p>`;
    const step=proof.steps.at(-1);
    html+=step?`<p>${escape(step.rule.reason)}</p><small>Source: ${escape(sources[step.rule.source].title)}</small>`:'<p>A property and its negation cannot both hold.</p>';
-  }else html+='<p>No matching example or impossibility proof is recorded. This may be a gap in the catalog.</p>';
+  }else html+='<p>No matching example or impossibility proof is recorded.</p>';
   html+='<p class="hover-hint">Click the cell for full evidence and source links.</p>';
  }
  const card=$('#hover-card');card.innerHTML=html;card.hidden=false;anchor.setAttribute('aria-describedby','hover-card');
@@ -135,7 +134,7 @@ function showHover(anchor){
  card.style.left=`${left}px`;card.style.top=`${top}px`;
 }
 $('#search').addEventListener('input',renderPicker);
-$('#edit-rows').onclick=()=>openPicker('rows');$('#edit-columns').onclick=()=>openPicker('columns');$('#edit-filters').onclick=()=>openPicker('query');
+$('#add-properties').onclick=()=>openPicker('properties');$('#edit-filters').onclick=()=>openPicker('query');
 $('#close-picker').onclick=()=>$('#picker').close();
 $('#picker-all').onclick=()=>{state[pickerTarget]=properties.map(p=>p.id);state.cell=null;render();renderPicker();};
 $('#picker-clear').onclick=()=>{state[pickerTarget]=[];state.cell=null;render();renderPicker();};
@@ -168,7 +167,7 @@ document.addEventListener('click',event=>{
  }else if(el.dataset.group){
   const signature=signatures.find(s=>s.group.id===el.dataset.group);
   const facts=[...signature.facts.keys()].sort((a,b)=>label(a).localeCompare(label(b)));
-  openDetail(signature.group.name,`<p>${escape(signature.group.description)}</p>${historyHTML(signature.group)}<p>${facts.length} recorded or inferred facts. Unlisted properties are unknown in this atlas.</p><div class="facts">${facts.map(lit=>`<button class="fact ${lit[0]==='!'?'negative':''}" data-proof="${signature.group.id}|${lit}">${escape(label(lit))} ↗</button>`).join('')}</div>`);
+  openDetail(signature.group.name,`<p>${escape(signature.group.description)}</p>${historyHTML(signature.group)}<p>${facts.length} recorded or inferred facts. Unlisted properties are unknown.</p><div class="facts">${facts.map(lit=>`<button class="fact ${lit[0]==='!'?'negative':''}" data-proof="${signature.group.id}|${lit}">${escape(label(lit))} ↗</button>`).join('')}</div>`);
  }else if(el.dataset.inference){
   const closure=classify(activeQuery()).closure,steps=[],seen=new Set();
   const visit=lit=>{if(seen.has(lit))return;seen.add(lit);const fact=closure.facts.get(lit);fact.parents.forEach(visit);steps.push(fact);};visit(el.dataset.inference);
@@ -178,7 +177,7 @@ document.addEventListener('click',event=>{
 
 $('#matrix').addEventListener('keydown',event=>{
  const cell=event.target.closest('[data-cell]');if(!cell)return;
- const cells=[...document.querySelectorAll('[data-cell]')],index=cells.indexOf(cell),n=state.columns.length;
+ const cells=[...document.querySelectorAll('[data-cell]')],index=cells.indexOf(cell),n=state.properties.length;
  const offset={ArrowRight:1,ArrowLeft:-1,ArrowDown:n,ArrowUp:-n}[event.key];
  if(offset!==undefined){event.preventDefault();cells[Math.max(0,Math.min(cells.length-1,index+offset))].focus();}
 });

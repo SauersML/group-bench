@@ -7,8 +7,8 @@ MF, hyperlinear, and sofic. Require or exclude any property to explore
 witnesses, impossibility proofs, and unresolved combinations. Each example
 includes dated provenance and source links where established.
 
-Edit rows and columns independently using one searchable list of properties.
-Select “Has” or “Does not have”; both versions can appear on the same axis.
+Use Add properties to build a square grid from one shared property list.
+Select “Has” or “Does not have”; both versions can appear, and every selection is added to both axes.
 Hover over a header for its definition or a cell for examples, dates, and
 obstructions. Click a cell for full evidence. Optional filters apply to every
 cell, and copied links preserve the complete selection.
@@ -48,7 +48,7 @@ and add sourced rules with all hypotheses. Tests validate all references,
 check each witness for consistency, check nontrivial intersections, compare
 DPLL with exhaustive truth tables, and prevent unknown facts becoming false.
 
-The URL fragment contains the selected signed properties, chosen rows and columns, and selected intersection. No account, tracking, or persistent storage
+The URL fragment contains the selected signed properties, shared property selection, and selected intersection. No account, tracking, or persistent storage
 is used by the atlas itself.
 
 ## Dates and priority
