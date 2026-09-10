@@ -1,6 +1,6 @@
 # Group Bench
 
-[Explore Group Bench](https://sauersml.github.io/group-atlas/)
+[Explore Group Bench](https://sauersml.github.io/group-bench/)
 
 An interactive map of 57 properties of countable discrete groups, including
 MF, hyperlinear, and sofic. Require or exclude any property to explore
