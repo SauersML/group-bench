@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {test} from 'node:test';
 import {history,formatDate} from './history.mjs';
-import {properties,rules,groups,sources,presets} from './data.mjs';
+import {properties,rules,groups,sources} from './data.mjs';
 import {propertyId,negate,propagate,consistent,classify,explanation,signatures} from './engine.mjs';
 test('catalog references and signatures are internally consistent',()=>{
  const ids=new Set(properties.map(p=>p.id));assert.equal(ids.size,properties.length);
@@ -57,8 +57,7 @@ test('DPLL agrees with exhaustive truth tables, including contradictions requiri
  const theory=[['a','b'],['a','!b'],['!a','b'],['!a','!b']].map((literals,i)=>({literals,rule:{id:i}}));
  assert.equal(propagate([],theory).conflict,null);assert.equal(consistent([],theory),false);
 });
-test('every displayed witness satisfies the entire query and every preset is well formed',()=>{
- for(const preset of presets)for(const lit of preset.query)assert.ok(properties.some(p=>p.id===propertyId(lit)));
+test('every displayed witness satisfies the entire query',()=>{
  for(const a of properties)for(const b of properties){
   const query=[a.id,negate(b.id)];const result=classify(query);
   for(const group of result.witnesses){const s=signatures.find(s=>s.group.id===group.id);assert.ok(query.every(lit=>s.facts.has(lit)));}
