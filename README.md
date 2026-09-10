@@ -1,13 +1,15 @@
 # Group Bench
 
-[Explore the live atlas](https://sauersml.github.io/group-atlas/)
+[Explore Group Bench](https://sauersml.github.io/group-atlas/)
 
 An interactive map of 57 properties of countable discrete groups, including
 MF, hyperlinear, and sofic. Require or exclude any property to explore
 witnesses, impossibility proofs, and unresolved combinations. Each example
 includes dated provenance and source links where established.
 
-Use Add properties to build a square grid from one shared property list.
+Use Add properties to build a triangular map from one shared property list.
+Each pair appears once, including the diagonal; mirrored duplicates are omitted.
+Columns share the available width, with horizontal scrolling for larger selections.
 Select “Has” or “Does not have”; both versions can appear, and every selection is added to both axes.
 Hover over a header for its definition or a cell for examples, dates, and
 obstructions. Click a cell for full evidence. Optional filters apply to every
@@ -73,7 +75,11 @@ hyperlinear + not MF via the separately sourced sofic ⇒ hyperlinear theorem.
 The denominator is all unordered pairs of distinct signed properties: with 57
 properties and their negations, there are 114 × 113 / 2 = 6,441 pairs. Mirror
 cells count once and diagonal repetitions are excluded. Filters and the visible
-grid never change this denominator. The chart always runs from 0 to 100%.
+grid never change this denominator. The line chart always runs from 0 to 100%. Both axes use shifted logarithmic
+spacing: reversed log(1 + years before the right endpoint) expands recent dates,
+and log(1 + percentage) expands low percentages while preserving zero.
+The labeled right endpoint is at least the start of next year. Straight segments
+connect dated observations; they do not assign proof dates between observations.
 
 The curve combines explicit dated property proofs with dated implication
 theorems. A deduction uses the latest date among every premise and theorem;

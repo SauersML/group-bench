@@ -32,7 +32,7 @@ function readURL(){
  state.query=literals('q');
  state.properties=params.has('properties')?literals('properties'):[...defaultProperties];
  const cell=(params.get('cell')||'').split(',');
- state.cell=cell.length===2&&state.properties.includes(cell[0])&&state.properties.includes(cell[1])?cell:null;
+ state.cell=cell.length===2&&state.properties.includes(cell[0])&&state.properties.includes(cell[1])?cell.sort((a,b)=>state.properties.indexOf(a)-state.properties.indexOf(b)):null;
 }
 function saveURL(){
  const params=new URLSearchParams({properties:state.properties.join(',')});
@@ -59,17 +59,18 @@ function renderQuery(){
 }
 function axisHTML(literal,axis){return `<button class="${axis}-name ${literal[0]==='!'?'negative':''}" data-define="${propertyId(literal)}" data-hover-property="${literal}"><span>${escape(label(literal))}</span></button>`;}
 function renderMap(){
- $('#property-count').textContent=`${state.properties.length} × ${state.properties.length}`;
- $('#matrix').style.gridTemplateColumns=`136px repeat(${Math.max(1,state.properties.length)}, var(--cell-size))`;
+ $('#property-count').textContent=`${state.properties.length} properties · ${state.properties.length*(state.properties.length+1)/2} cells`;
+ $('#matrix').style.gridTemplateColumns=`136px repeat(${Math.max(1,state.properties.length)}, minmax(var(--cell-size), 1fr))`;
  if(!state.properties.length){$('#matrix').innerHTML='<p class="map-empty">Add a property to start the grid.</p>';return;}
- let html='<div class="corner">Row AND column</div>'+state.properties.map(lit=>axisHTML(lit,'column')).join('');
- for(const row of state.properties){
-  html+=axisHTML(row,'row');
-  for(const col of state.properties){
+ let html='<div class="corner" aria-hidden="true"></div>'+state.properties.map(lit=>axisHTML(lit,'column')).join('');
+ for(const [rowIndex,row] of state.properties.entries()){
+  html+=axisHTML(row,'row').replace('<button ',`<button style="grid-row:${rowIndex+2};grid-column:1" `);
+  for(let colIndex=rowIndex;colIndex<state.properties.length;colIndex++){
+   const col=state.properties[colIndex];
    const cell=[row,col],result=classify([...state.query,...cell]);
    const title=`${cell.map(label).join(' AND ')}: ${statusLabel[result.status]}`;
    const selected=state.cell&&state.cell.join(',')===cell.join(',');
-   html+=`<button class="cell ${result.status} ${selected?'selected':''}" data-cell="${cell.join(',')}" aria-label="${escape(title)}" aria-pressed="${!!selected}">${result.status==='exists'?`<span class="symbol">${escape(result.witnesses[0].symbol)}</span>`:result.status==='impossible'?'Impossible':'Unknown'}</button>`;
+   html+=`<button style="grid-row:${rowIndex+2};grid-column:${colIndex+2}" class="cell ${result.status} ${selected?'selected':''}" data-cell="${cell.join(',')}" aria-label="${escape(title)}" aria-pressed="${!!selected}">${result.status==='exists'?`<span class="symbol">${escape(result.witnesses[0].symbol)}</span>`:result.status==='impossible'?'Impossible':'Unknown'}</button>`;
   }
  }
  $('#matrix').innerHTML=html;
@@ -181,8 +182,11 @@ document.addEventListener('click',event=>{
 
 $('#matrix').addEventListener('keydown',event=>{
  const cell=event.target.closest('[data-cell]');if(!cell)return;
- const cells=[...document.querySelectorAll('[data-cell]')],index=cells.indexOf(cell),n=state.properties.length;
- const offset={ArrowRight:1,ArrowLeft:-1,ArrowDown:n,ArrowUp:-n}[event.key];
- if(offset!==undefined){event.preventDefault();cells[Math.max(0,Math.min(cells.length-1,index+offset))].focus();}
+ const direction={ArrowRight:[0,1],ArrowLeft:[0,-1],ArrowDown:[1,0],ArrowUp:[-1,0]}[event.key];
+ if(!direction)return;
+ event.preventDefault();
+ const [row,col]=cell.dataset.cell.split(',').map((literal,i)=>state.properties.indexOf(literal)+direction[i]);
+ if(row<0||col<row||col>=state.properties.length)return;
+ document.querySelector(`[data-cell="${state.properties[row]},${state.properties[col]}"]`).focus();
 });
 readURL();render();
