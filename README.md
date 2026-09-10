@@ -27,6 +27,13 @@ Run `python3 serve.py` for a local preview. Run `python3 build.py` to validate
 and build the static website into `dist/`. The build runs the Node test suite.
 GitHub Pages publishes automatically on pushes to `main`.
 
+Black borders identify documented open questions, with complete hypotheses and dated sources.
+The [9 September 2026 literature review](RESEARCH.md) covers the open questions, recent August papers,
+and the five examples added during the review. `questions.mjs` matches equivalent
+conjunctions, including filters and repeated diagonal literals, and also records
+formerly open questions with their answers and questions excluded by theorems
+(see Named questions below).
+
 ## Mathematical contract
 
 - **Exists** requires a named witness with every selected literal established.
@@ -35,7 +42,7 @@ GitHub Pages publishes automatically on pushes to `main`.
   declaration of an open problem, and Boolean satisfiability is not existence.
 - Missing group facts remain unknown; no closed-world assumption is made.
 - Sources are mathematical references. The Sauers example also links to a pinned
-  Palomar-verified result; the atlas’s own deductions are not Lean certificates.
+  Palomar-verified result; Group Bench’s own deductions are not Lean certificates.
 - All groups are countable and discrete. Simple means nontrivial. Free allows
   rank zero and countably infinite rank. Growth and decision-problem axes
   explicitly include finite generation. Integral coefficients are fixed on
@@ -60,7 +67,7 @@ check each witness for consistency, check nontrivial intersections, compare
 DPLL with exhaustive truth tables, and prevent unknown facts becoming false.
 
 The URL fragment contains the selected signed properties, shared property selection, and selected intersection. No account, tracking, or persistent storage
-is used by the atlas itself.
+is used by Group Bench itself.
 
 ## Dates and priority
 
@@ -83,11 +90,13 @@ hyperlinear + not MF via the separately sourced sofic ⇒ hyperlinear theorem.
 
 `questions.mjs` is a dated literature assessment of existence questions of the
 form “is there a group with exactly these properties?”. Each entry names its
-signed literals, a status, the assessment date, and sources:
+signed requirements, a status, the review date, and sources:
 
-- **open**: the cited sources state the question as unresolved on the
-  assessment date. This is a statement about the literature, not a proof of
-  openness, and it is never inferred from a gap in the grid.
+- **open**: the cited source, with its own date, states the question as
+  unresolved. This is a statement about the literature, not a proof of
+  openness, and it is never inferred from a gap in the grid. Open entries are
+  the black-bordered cells; a query matches an entry only when the two are
+  equivalent under the recorded implications.
 - **solved**: formerly open, with the date and author of the answer and the
   catalog witness that realises it. The witness may be a later example than
   the first solution; the note says so.
@@ -95,11 +104,12 @@ signed literals, a status, the assessment date, and sources:
 
 The tests require every status to agree with the map: an open entry has neither
 a witness nor an obstruction here, a solved entry names a group the classifier
-returns for its literals, and an impossible entry is contradicted by the rules.
-Adding a witness or rule that decides an open question therefore fails the
-build until the entry is updated. The page lists the questions by status and
-places any of them on the map; a cell whose requirements match an entry
-exactly shows it in the evidence panel and on hover.
+returns for its requirements, and an impossible entry is contradicted by the
+rules. Adding a witness or rule that decides an open question therefore fails
+the build until the entry is updated. The page lists the questions by status
+and places any of them on the map; a cell equivalent to an entry under the
+recorded implications shows it in the evidence panel and on hover, and
+excluded entries match their requirements exactly.
 
 The current assessment covers the Burnside problems and their finitely
 presented forms, Milnor’s growth problem, Day’s and von Neumann’s amenability
@@ -120,7 +130,7 @@ grid never change this denominator. The step line chart always runs from 0 to 10
 spacing: reversed log(1 + years before the right endpoint) expands recent dates,
 and log(1 + percentage) expands low percentages while preserving zero.
 The labeled right endpoint is at least the start of next year. The plot spans the content width on a white background and uses a pure
-step line without markers. Hover by date, or focus the line and use arrow keys, to
+6-pixel step line without markers. Chart labels remain 16 pixels at every viewport width. Hover by date, or focus the line and use arrow keys, to
 inspect dated observations; click or press Enter to open their sources. Horizontal segments
 keep the cumulative total constant between recorded dates; vertical segments show
 newly dated pairs at each date. Axis explanations are in How it works and hover

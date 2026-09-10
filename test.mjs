@@ -3,7 +3,7 @@ import {test} from 'node:test';
 import {history,formatDate} from './history.mjs';
 import {properties,rules,groups,sources} from './data.mjs';
 import {propertyId,negate,propagate,consistent,classify,explanation,signatures} from './engine.mjs';
-import {questions} from './questions.mjs';
+import {questions,namedQuestion} from './questions.mjs';
 test('catalog references and signatures are internally consistent',()=>{
  const ids=new Set(properties.map(p=>p.id));assert.equal(ids.size,properties.length);
  assert.equal(new Set(groups.map(g=>g.id)).size,groups.length);
@@ -25,7 +25,7 @@ test('named deep intersections have real witnesses',()=>{
  assert.ok(classify(['fg','divisible','!trivial','!finite']).witnesses.some(g=>g.id==='guba'));
  assert.ok(classify(['fp','!hopfian','t','!rf']).witnesses.some(g=>g.id==='cornulier'));
  assert.ok(classify(['fp','!sofic']).witnesses.some(g=>g.id==='openaiFP'));
- assert.ok(classify(['fp','tf','!sofic']).witnesses.some(g=>g.id==='fournierFacio'));
+ assert.ok(classify(['fp','tf','!sofic']).witnesses.some(g=>g.id==='fournier_facio'));
  assert.equal(classify(['fg','rf','exponent','!finite']).status,'impossible');
  assert.notEqual(classify(['rf','exponent','!finite']).status,'impossible','Zel’manov’s theorem needs finite generation.');
  assert.equal(classify(['torsion','f2']).status,'impossible');
@@ -36,15 +36,16 @@ test('named questions agree with the catalog and carry dated sources',()=>{
  const ids=new Set(properties.map(p=>p.id)),dateShape=/^\d{4}(-\d{2}(-\d{2})?)?$/;
  assert.equal(new Set(questions.map(q=>q.id)).size,questions.length);
  for(const item of questions){
-  assert.match(item.assessed,/^\d{4}-\d{2}-\d{2}$/,item.id);
-  assert.equal(new Set(item.literals).size,item.literals.length,item.id);
-  for(const lit of item.literals)assert.ok(ids.has(propertyId(lit)),`${item.id} ${lit}`);
+  assert.match(item.reviewed,/^\d{4}-\d{2}-\d{2}$/,item.id);
+  assert.equal(new Set(item.requirements).size,item.requirements.length,item.id);
+  for(const lit of item.requirements)assert.ok(ids.has(propertyId(lit)),`${item.id} ${lit}`);
   assert.ok(item.question&&item.note,item.id);
   if(item.posed){assert.ok(sources[item.posed.source],item.id);assert.ok(item.posed.by,item.id);if(item.posed.date!==null)assert.match(item.posed.date,dateShape,item.id);}
-  const result=classify(item.literals);
+  for(const id of item.sources||[])assert.ok(sources[id]?.url,`${item.id} ${id}`);
+  const result=classify(item.requirements);
   if(item.status==='open'){
    assert.equal(result.status,'unresolved',`${item.id} is recorded open but the catalog decides it`);
-   assert.ok(item.sources.length,item.id);for(const id of item.sources)assert.ok(sources[id]?.url,`${item.id} ${id}`);
+   assert.ok(sources[item.source]?.url,item.id);assert.match(item.sourceDate,dateShape,item.id);
    assert.ok(!item.resolved&&!item.obstruction,item.id);
   }else if(item.status==='solved'){
    assert.equal(result.status,'exists',item.id);
@@ -55,16 +56,23 @@ test('named questions agree with the catalog and carry dated sources',()=>{
    assert.equal(result.status,'impossible',item.id);
    assert.ok(sources[item.obstruction.source],item.id);
   }else assert.fail(`${item.id}: unknown status ${item.status}`);
+  assert.equal(namedQuestion(item.requirements)?.id,item.id,`${item.id} must match its own requirements`);
  }
- assert.ok(questions.some(q=>q.id==='hyperbolic-not-rf'&&q.status==='open'));
- assert.ok(questions.some(q=>q.id==='fp-intermediate'&&q.status==='open'));
+ assert.ok(questions.some(q=>q.id==='hyperbolic_rf'&&q.status==='open'));
+ assert.ok(questions.some(q=>q.id==='fp_growth'&&q.status==='open'));
  assert.ok(questions.some(q=>q.id==='nonsofic'&&q.status==='solved'&&q.resolved.witness==='openai'));
- assert.ok(questions.some(q=>q.id==='rf-exponent'&&q.status==='impossible'));
+ assert.ok(questions.some(q=>q.id==='rf_exponent'&&q.status==='impossible'));
+ assert.equal(namedQuestion(['!sofic','!sofic'])?.id,'nonsofic');
+ assert.equal(namedQuestion(['intermediate','fg'])?.id,'intermediate_growth');
+ assert.equal(namedQuestion(['fg','torsion','!finite','intermediate']),undefined,'A stronger answered query is not the same question.');
+ assert.equal(namedQuestion(['t','amenable','!finite'])?.id,'amenable_kazhdan');
+ assert.equal(namedQuestion(['t','amenable']),undefined,'Finite groups have both properties.');
+ assert.equal(namedQuestion(['fp','!sofic'])?.id,'fp_nonsofic');
 });
 test('multi-premise implications preserve all hypotheses and contrapositives',()=>{
  assert.equal(classify(['fp','lef','!rf']).status,'impossible');
  assert.equal(classify(['fp','!rf']).status,'exists');
- assert.equal(classify(['lef','!rf']).status,'unresolved');
+ assert.equal(classify(['lef','!rf']).status,'exists');
  assert.ok(propagate(['lef','!rf']).facts.has('!fp'));
  assert.equal(classify(['t','amenable','!finite']).status,'impossible');
  assert.equal(classify(['finite','tf','!trivial']).status,'impossible');
@@ -135,4 +143,39 @@ test('each example has explicit provenance without invented dates',()=>{
  assert.equal(history.sauers.firstProof,'2026-08-24');assert.equal(history.sauers.formal.version,1);
  assert.equal(history.grigorchuk.firstProof,'1980');
  assert.ok(history.grigorchuk.milestones.some(m=>m.date==='1984'&&m.facts.includes('intermediate')));
+});
+
+import {openQuestions,openQuestion} from './questions.mjs';
+test('documented open questions retain complete hypotheses and dated primary sources',()=>{
+ assert.equal(new Set(openQuestions.map(q=>q.id)).size,openQuestions.length);
+ for(const q of openQuestions){
+  assert.ok(sources[q.source]?.url,q.id);
+  assert.match(q.reviewed,/^\d{4}-\d{2}-\d{2}$/);
+  assert.ok(q.sourceDate<=q.reviewed);
+  assert.equal(classify(q.requirements).status,'unresolved',q.id);
+  assert.equal(openQuestion(q.requirements)?.id,q.id);
+ }
+ assert.equal(openQuestion(['!hyperlinear','!hyperlinear'])?.id,'nonhyperlinear');
+ assert.equal(openQuestion(['hyp','!lef'])?.id,'hyperbolic_rf');
+ assert.equal(openQuestion(['fp','intermediate','fg'])?.id,'fp_growth');
+ assert.equal(openQuestion(['fp','intermediate','simple']),undefined);
+ assert.equal(openQuestion(['lo','t']),undefined);
+ assert.equal(openQuestion(['lo','t','!trivial'])?.id,'ordered_kazhdan');
+ assert.equal(openQuestion(['fp','torsion']),undefined);
+ assert.equal(openQuestion(['fp','simple','amenable']),undefined);
+ assert.equal(openQuestion(['sofic','t','!rf']),undefined);
+ assert.equal(openQuestion(['fp','sofic','t','!rf'])?.id,'fp_sofic_kazhdan');
+ for(const query of [['!sofic'],['!mf'],['cat0','!biautomatic'],['fp','lef','!rf']])assert.equal(openQuestion(query),undefined);
+});
+test('recent and historical additions certify only their recorded group properties',()=>{
+ for(const [id,query] of [['fournier_facio',['fp','tf','t','!sofic']],['kun_thom',['fg','!sofic','!tf']],['fisher_lodha',['li','tf','!fg']],['thom_lef',['lef','t','!rf']],['leary_minasyan',['cat0','!biautomatic','tf']]]){
+  assert.ok(classify(query).witnesses.some(g=>g.id===id));
+  assert.ok(history[id].milestones.some(m=>query.every(lit=>m.facts.includes(lit))));
+ }
+ for(const id of ['fournier_facio','kun_thom']){
+  const s=signatures.find(g=>g.group.id===id);
+  for(const lit of ['mf','!mf','hyperlinear','!hyperlinear'])assert.ok(!s.facts.has(lit),`${id}: ${lit}`);
+ }
+ assert.equal(history.kun_thom.firstProof,'2026-08-20');
+ assert.equal(history.fisher_lodha.firstProof,'2026-08-26');
 });

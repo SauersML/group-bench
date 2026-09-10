@@ -1,5 +1,5 @@
 import {properties,groups,sources} from './data.mjs';
-import {questions} from './questions.mjs';
+import {questions,openQuestion,namedQuestion} from './questions.mjs';
 import {history as groupHistory,formatDate} from './history.mjs';
 import {datedSignatures} from './timeline.mjs';
 const datedGroups=new Map(datedSignatures().map(s=>[s.group.id,s.facts]));
@@ -12,17 +12,15 @@ let pickerTarget='properties';
 const activeQuery=()=>[...new Set([...state.query,...(state.cell||[])])];
 const statusLabel={exists:'Example exists',impossible:'Impossible',unresolved:'Unknown'};
 function sourceHTML(id){const s=sources[id];return s.url?`<a class="source" href="${escape(s.url)}" target="_blank" rel="noopener">${escape(s.title)} ↗</a>`:`<span class="source">${escape(s.title)} · ${escape(s.note)}</span>`;}
-// A named question applies only to the exact set of selected requirements.
-const questionKey=literals=>[...new Set(literals)].sort().join(',');
-const questionFor=query=>questions.find(item=>questionKey(item.literals)===questionKey(query));
+// Named questions: open, answered, or excluded, matched to the equivalent query.
 const questionStatusLabel={open:'Open question',solved:'Answered',impossible:'Excluded by theorem'};
-const questionSummary=item=>item.status==='solved'?`Answered ${formatDate(item.resolved.date)} · ${item.resolved.by}`:item.status==='open'?`Stated open in the cited sources, assessed ${formatDate(item.assessed)}`:'Excluded by a recorded theorem';
-const questionSources=item=>[...new Set([item.posed?.source,...(item.sources||[]),item.resolved?.source,item.obstruction?.source].filter(Boolean))];
+const questionSummary=item=>item.status==='solved'?`Answered ${formatDate(item.resolved.date)} · ${item.resolved.by}`:item.status==='open'?`Open question · Source ${formatDate(item.sourceDate)} · Reviewed ${formatDate(item.reviewed)}`:'Excluded by a recorded theorem';
+const questionSources=item=>[...new Set([item.posed?.source,item.source,...(item.sources||[]),item.resolved?.source,item.obstruction?.source].filter(Boolean))];
 function questionDatesHTML(item){
  const parts=[];
  if(item.posed)parts.push(`Asked${item.posed.date?' '+escape(formatDate(item.posed.date)):''} · ${escape(item.posed.by)}`);
  if(item.resolved)parts.push(`Answered ${escape(formatDate(item.resolved.date))} · ${escape(item.resolved.by)} · catalog witness: ${escape(groups.find(g=>g.id===item.resolved.witness).name)}`);
- if(item.status==='open')parts.push(`Stated open in the cited sources · assessed ${escape(formatDate(item.assessed))}`);
+ if(item.status==='open')parts.push(`Stated open in a source dated ${escape(formatDate(item.sourceDate))} · reviewed ${escape(formatDate(item.reviewed))}`);
  if(item.status==='impossible')parts.push('Excluded by the recorded rules');
  return parts.map(part=>`<span>${part}</span>`).join('');
 }
@@ -31,14 +29,14 @@ function renderQuestions(){
  const headings={open:'Still open',solved:'Answered',impossible:'Excluded by theorem'};
  $('#question-list').innerHTML=Object.keys(headings).map(status=>{
   const items=questions.filter(q=>q.status===status);
-  return `<div class="question-group"><h3>${headings[status]} <span>${items.length}</span></h3>`+items.map(item=>`<article class="question-row ${item.status}"><button class="question-open" data-question="${item.id}" aria-label="Show on the map: ${escape(item.question)}"><strong>${escape(item.question)}</strong><span class="question-literals">${item.literals.map(lit=>`<span class="chip ${lit[0]==='!'?'negative':''}">${escape(label(lit))}</span>`).join('')}</span></button><div class="question-dates">${questionDatesHTML(item)}</div><p class="question-note">${escape(item.note)}</p><div class="question-sources">${questionSources(item).map(sourceHTML).join('')}</div></article>`).join('')+'</div>';
+  return `<div class="question-group"><h3>${headings[status]} <span>${items.length}</span></h3>`+items.map(item=>`<article class="question-row ${item.status}"><button class="question-open" data-question="${item.id}" aria-label="Show on the map: ${escape(item.question)}"><strong>${escape(item.question)}</strong><span class="question-literals">${item.requirements.map(lit=>`<span class="chip ${lit[0]==='!'?'negative':''}">${escape(label(lit))}</span>`).join('')}</span></button><div class="question-dates">${questionDatesHTML(item)}</div><p class="question-note">${escape(item.note)}</p><div class="question-sources">${questionSources(item).map(sourceHTML).join('')}</div></article>`).join('')+'</div>';
  }).join('');
- $('#question-count').textContent=`${questions.length} questions · assessed ${formatDate(questions[0].assessed)}`;
+ $('#question-count').textContent=`${questions.length} questions · reviewed ${formatDate(questions[0].reviewed)}`;
 }
 function showQuestion(item){
- state.properties=[...new Set([...state.properties,...item.literals])];
- const cell=[item.literals[0],item.literals[1]||item.literals[0]].sort((a,b)=>state.properties.indexOf(a)-state.properties.indexOf(b));
- state.query=item.literals.slice(2);state.cell=cell;render();
+ state.properties=[...new Set([...state.properties,...item.requirements])];
+ const cell=[item.requirements[0],item.requirements[1]||item.requirements[0]].sort((a,b)=>state.properties.indexOf(a)-state.properties.indexOf(b));
+ state.query=item.requirements.slice(2);state.cell=cell;render();
  $('.matrix-scroll').scrollIntoView({block:'start'});
  document.querySelector(`[data-cell="${cell.join(',')}"]`)?.focus({preventScroll:true});hideHover();
 }
@@ -111,9 +109,10 @@ function renderMap(){
   for(let colIndex=rowIndex;colIndex<state.properties.length;colIndex++){
    const col=state.properties[colIndex];
    const cell=[row,col],result=classify([...state.query,...cell]);
-   const title=`${cell.map(label).join(' AND ')}: ${statusLabel[result.status]}`;
+   const question=openQuestion([...state.query,...cell]);
+   const title=`${cell.map(label).join(' AND ')}: ${statusLabel[result.status]}${question?' · Open question':''}`;
    const selected=state.cell&&state.cell.join(',')===cell.join(',');
-   html+=`<button style="grid-row:${rowIndex+2};grid-column:${colIndex+2}" class="cell ${result.status} ${selected?'selected':''}" data-cell="${cell.join(',')}" aria-label="${escape(title)}" aria-pressed="${!!selected}">${result.status==='exists'?`<span class="symbol">${escape(result.witnesses[0].symbol)}</span>`:result.status==='impossible'?'Impossible':'Unknown'}</button>`;
+   html+=`<button style="grid-row:${rowIndex+2};grid-column:${colIndex+2}" class="cell ${result.status} ${question?'open-question':''} ${selected?'selected':''}" data-cell="${cell.join(',')}" aria-label="${escape(title)}" aria-pressed="${!!selected}">${result.status==='exists'?`<span class="symbol">${escape(result.witnesses[0].symbol)}</span>`:result.status==='impossible'?'Impossible':'Unknown'}</button>`;
   }
  }
  $('#matrix').innerHTML=html;
@@ -127,7 +126,7 @@ function renderEvidence(){
  let html=`<div class="evidence-head"><div><div class="eyebrow">SELECTED INTERSECTION</div><h2 class="evidence-title">${titles[result.status]}</h2></div><span class="status-badge ${result.status}">${statusLabel[result.status]}</span></div>`;
  html+=`<div class="evidence-query">${query.map(lit=>`<span>${escape(label(lit))}</span>`).join('')||'<span>No restrictions</span>'}</div>`;
  html+='<button class="quiet" id="clear-cell">Close evidence</button>';
- const question=questionFor(query);
+ const question=namedQuestion(query);
  if(question)html+=questionHTML(question);
  if(result.status==='exists'){
   html+='<div class="witnesses">'+result.witnesses.map((g,i)=>`<details class="witness" ${i===0?'open':''}><summary><span class="group-symbol">${escape(g.symbol)}</span><span>${escape(g.name)}</span></summary><p>${escape(g.description)}</p>${historyHTML(g)}${sourceHTML(g.source)}<div class="facts">${(query.length?query:g.facts.slice(0,7)).map(lit=>`<button class="fact ${lit[0]==='!'?'negative':''}" data-proof="${g.id}|${lit}" title="Show why this property holds">${escape(label(lit))} ↗</button>`).join('')}</div><button class="quiet" data-group="${g.id}">Explore all recorded properties →</button></details>`).join('')+'</div>';
@@ -162,7 +161,7 @@ function showHover(anchor){
   const lit=anchor.dataset.hoverProperty,p=byId[propertyId(lit)];
   html=`<strong>${escape(label(lit))}</strong><p>${lit[0]==='!'?'Does not satisfy the following property: ':''}${escape(p.definition)}</p>`;
  }else{
-  const query=[...new Set([...state.query,...anchor.dataset.cell.split(',')])],result=classify(query),question=questionFor(query);
+  const query=[...new Set([...state.query,...anchor.dataset.cell.split(',')])],result=classify(query),question=namedQuestion(query);
   html=`<strong>${escape(query.map(label).join(' AND '))}</strong><p class="text-${result.status}">${statusLabel[result.status]}</p>`;
   if(question)html+=`<p><strong>${escape(question.question)}</strong><br>${escape(questionSummary(question))}</p>`;
   if(result.status==='exists'){
@@ -176,7 +175,7 @@ function showHover(anchor){
    html+=`<p>Conflicting requirements: ${escape(proof.core.map(label).join(' AND '))}.</p>`;
    const step=proof.steps.at(-1);
    html+=step?`<p>${escape(step.rule.reason)}</p><small>Source: ${escape(sources[step.rule.source].title)}</small>`:'<p>A property and its negation cannot both hold.</p>';
-  }else html+=question?`<p>${escape(question.note)}</p><small>Source: ${escape(sources[question.sources[0]].title)}</small>`:'<p>No matching example or impossibility proof is recorded.</p>';
+  }else html+=question?`<p>${escape(question.note)}</p><small>Source: ${escape(sources[question.source].title)}</small>`:'<p>No matching example or impossibility proof is recorded.</p>';
   html+='<p class="hover-hint">Click the cell for full evidence and source links.</p>';
  }
  const card=$('#hover-card');card.innerHTML=html;card.hidden=false;anchor.setAttribute('aria-describedby','hover-card');

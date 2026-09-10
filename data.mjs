@@ -1,12 +1,20 @@
 // All statements concern countable discrete groups. Missing facts are unknown.
 export const sources = {
- openaiNonsofic:{title:'OpenAI — Nonsofic groups exist, Ten Advances, Chapter 3 (1 August 2026, original manuscript)',url:'https://cdn.openai.com/pdf/ten-proofs-oai-original.pdf'},
- openaiAnnouncement:{title:'OpenAI — Ten advances in mathematics and theoretical computer science (1 August 2026)',url:'https://openai.com/index/ten-advances-in-mathematics/'},
- growthQuestion:{title:'Babenko–Sabourau — Minimal volume entropy and fiber growth (2025), §2.8',url:'https://jep.centre-mersenne.org/item/10.5802/jep.295.pdf'},
- hyperbolicQuestion:{title:'Schesler — Finitely generated infinite torsion groups that are residually finite simple (2025), Introduction',url:'https://doi.org/10.1016/j.aim.2025.110441'},
+ ff2026:{"title": "Fournier-Facio — A torsion-free non-sofic group (3 August 2026), Theorem 1.3 and §2", "url": "https://arxiv.org/html/2608.02025v1"},
+ ff2026revision:{"title": "Fournier-Facio — revised note (14 August 2026)", "url": "https://arxiv.org/abs/2608.02025v2"},
+ kunThom2026:{"title": "Kun–Thom — Nonsofic wreath products of residually finite groups (20 August 2026 revision), Theorems A and E", "url": "https://arxiv.org/html/2608.06222v3"},
+ fisherLodha2026:{"title": "Fisher–Lodha — A note on normal generation and the first ℓ²-Betti number (26 August 2026)", "url": "https://arxiv.org/html/2608.25988v1"},
+ alekseevThom2026:{"title": "Alekseev–Thom — Centralizers of sofic approximations of Kazhdan groups (5 August 2026), Open problem 6.1", "url": "https://arxiv.org/html/2608.05362v1"},
+ learyMinasyan2019:{"title": "Leary–Minasyan — Commensurating HNN-extensions: non-positive curvature and biautomaticity (8 July 2019), Example 9.4", "url": "https://arxiv.org/pdf/1907.03515v1"},
+ thom2008:{"title": "Thom — Examples of hyperlinear groups without factorization property (13 October 2008)", "url": "https://arxiv.org/abs/0810.2180v1"},
+ rees2022:{"title": "Rees — The development of the theory of automatic groups (30 May 2022), §6", "url": "https://arxiv.org/pdf/2205.14911"},
+ hyperlinearQuestion:{"title": "Taller–Vidick — Approximating the quantum value of an LCS game is RE-hard (30 July 2025), Introduction", "url": "https://arxiv.org/html/2507.22444v1"},
+ rfCat0Question:{"title": "Shepherd–Valiunas — Higher-rank GBS groups: non-positive curvature and biautomaticity (8 September 2025), Introduction", "url": "https://doi.org/10.1007/s10711-025-01037-y"},
+ orderTQuestion:{"title": "Cornulier — Property FW and 1-dimensional piecewise groups (22 November 2020), Proposition 3.3", "url": "https://www.normalesup.org/~cornulier/FW_piecewise_short.pdf"},
+ torsionQuestion:{"title": "Haettel–Osajda — Locally elliptic actions, torsion groups, and nonpositively curved spaces (11 July 2025 revision), §2.2(IX)", "url": "https://arxiv.org/html/2110.12431v3"},
+ zaremskyQuestions:{"title": "Zaremsky — Some open problems (12 July 2026), §1, problems 10–12", "url": "https://zaremsky.github.io/open_problems.pdf"},
  openaiLean:{title:'OpenAI — ten-proofs, NonSoficGroup.lean: exists_finitelyPresented_nonsofic_group (Lean 4 certificate, committed 2 August 2026)',url:'https://github.com/openai/ten-proofs/blob/main/NonSoficGroup.lean'},
- fournierFacio2026:{title:'Fournier-Facio — A torsion-free non-sofic group (arXiv:2608.02025, 3 August 2026; revised 14 August 2026)',url:'https://arxiv.org/abs/2608.02025'},
- sapirProblems:{title:'Sapir — Some group theory problems (2007), Problems 1.1 and 1.2',url:'https://arxiv.org/abs/0704.2899'},
+ sapirProblems:{title:'Sapir — Some group theory problems (22 April 2007), Problems 1.1 and 1.2',url:'https://arxiv.org/abs/0704.2899'},
  juschenkoProblems:{title:'Juschenko — Amenability of discrete groups by examples (2017 lecture notes), Appendix C: conjectures and open problems',url:'https://metaphor.ethz.ch/x/2017/hs/401-3370-67L/sc/Juschenko.pdf'},
  milnor1968:{title:'Grigorchuk — Milnor’s problem on the growth of groups and its consequences (2011 survey; Milnor, Problem 5603, Amer. Math. Monthly 75 (1968))',url:'https://arxiv.org/abs/1111.0512'},
  burnsideHistory:{title:'MacTutor History of Mathematics — A history of the Burnside problem',url:'https://mathshistory.st-andrews.ac.uk/HistTopics/Burnside_problem/'},
@@ -25,6 +33,11 @@ export const sources = {
  ershov2008:{title:'Ershov — Golod–Shafarevich groups with property (T) and Kac–Moody groups, Duke Math. J. 145 (2008)',url:'https://doi.org/10.1215/00127094-2008-053'},
  guba1986:{title:'Guba — A finitely generated complete group (1986; translation 1987)',url:'https://www.mathnet.ru/eng/im1540'},
  cornulier2007:{title:'de Cornulier — Finitely presentable, non-Hopfian groups with Kazhdan’s Property (T) and infinite outer automorphism group (February 2005 preprint; Proc. Amer. Math. Soc. 135 (2007))',url:'https://arxiv.org/abs/math/0502140'},
+
+ openaiNonsofic:{title:'OpenAI — Nonsofic groups exist, Ten Advances, Chapter 3 (1 August 2026, original manuscript)',url:'https://cdn.openai.com/pdf/ten-proofs-oai-original.pdf'},
+ openaiAnnouncement:{title:'OpenAI — Ten advances in mathematics and theoretical computer science (1 August 2026)',url:'https://openai.com/index/ten-advances-in-mathematics/'},
+ growthQuestion:{title:'Babenko–Sabourau — Minimal volume entropy and fiber growth (2025), §2.8',url:'https://jep.centre-mersenne.org/item/10.5802/jep.295.pdf'},
+ hyperbolicQuestion:{title:'Schesler — Finitely generated infinite torsion groups that are residually finite simple (2025), Introduction',url:'https://doi.org/10.1016/j.aim.2025.110441'},
  bdh1980:{title:'Baumslag–Dyer–Heller — The topology of discrete groups (1980)',url:'https://doi.org/10.1016/0022-4049(80)90040-7'},
  cde2012:{title:'Carrión–Dadarlat–Eckhardt — On groups with quasidiagonal C*-algebras (2012)',url:'https://arxiv.org/abs/1210.4050v1'},
  tww2015:{title:'Tikuisis–White–Winter — Quasidiagonality of nuclear C*-algebras (2015)',url:'https://arxiv.org/abs/1509.08318v1'},
@@ -227,6 +240,11 @@ export const groups = [
  g('nekrashevych','Nekrashevych’s simple torsion group','N','An infinite finitely generated simple torsion group of intermediate growth containing the first Grigorchuk group.','!finite fg simple torsion intermediate !exponent','nekrashevych'),
  g('openai','OpenAI’s non-sofic Leavitt unit group','L₂×','The countable unit group of the binary Leavitt algebra L_F₂(1,2). OpenAI’s Chapter 3 proves that this group is not sofic.','!sofic','openaiNonsofic'),
  g('sauers','Sauers’ sofic non-MF group','E','The explicit finitely presented group in Palomar record PALOMAR-2026-08-24-000006 v1. The pinned theorem proves soficity and failure of the CDE operator-norm MF property.','fp sofic !mf','palomar'),
+ g("fournier_facio","Fournier-Facio’s torsion-free non-sofic group","Gₜ","The quotient G constructed in §2 is finitely presented, torsion-free, has property (T), and is not sofic.","fp tf t !sofic","ff2026"),
+ g("kun_thom","Kun–Thom’s non-sofic wreath product","W","W = (⊕_{G/Γ} C₂) ⋊ G, with Γ = EL₃(F₂[x₁,x₂,x₃]) and G = EL₃(F₂[x₁±¹,x₂±¹,x₃±¹]) ⋊ SL₃(ℤ), as in Theorem E. The lamp subgroup gives elements of order two.","fg !sofic !tf","kunThom2026"),
+ g("fisher_lodha","Fisher–Lodha’s locally free group Γ₁","Γ₁","The n = 1 construction has first ℓ²-Betti number one and normal rank one. It is countable and locally free, hence locally indicable and torsion-free, but not finitely generated.","tf li !fg","fisherLodha2026"),
+ g("thom_lef","Thom’s LEF Kazhdan group","Tₗ","Thom’s first example is locally embeddable in finite groups, has property (T), and is not residually finite.","lef t !rf","thom2008"),
+ g("leary_minasyan","Leary–Minasyan’s group G₁,₂","G₁,₂","The group ⟨a,b,t | [a,b] = 1, tat⁻¹ = b, tb²t⁻¹ = a⁻²b⟩ in Example 9.4 is CAT(0) and not biautomatic. As an HNN extension of ℤ² it is torsion-free.","cat0 !biautomatic tf","learyMinasyan2019"),
  g('thompson','Thompson’s group F','F','Piecewise-linear dyadic homeomorphisms of the unit interval. Amenability is deliberately not assigned here.','!finite fp finfty tf !abelian !ea !rf !f2 bo exp !simple','thompson'),
  g('burnside','Free Burnside group B(2, n), n odd ≥ 4381','B(2,n)','The quotient of the free group of rank two by the normal subgroup generated by all nth powers, for a fixed odd exponent n ≥ 4381. Novikov and Adian proved it infinite; Adian proved it non-amenable. Adian later lowered the bound for infiniteness to odd n ≥ 665, which is not separately sourced here. Finite presentability, simplicity and property (T) are not assigned.','fg !finite exponent !amenable','novikovAdian1968'),
  g('olshanskiiSapir','Ol’shanskii–Sapir group','Gₙ','For a sufficiently large odd n, a finitely presented ascending HNN extension of a finitely generated infinite group of exponent n (Theorem 1.1). It contains a free Burnside group of exponent n, so it has torsion, and it maps onto an infinite cyclic group, so it is not a torsion group. It is non-amenable and has no free subgroup of rank two.','fp !amenable !f2 !tf !torsion','olshanskiiSapir2003'),
@@ -234,8 +252,5 @@ export const groups = [
  g('ershov','Ershov’s residually finite torsion Kazhdan group','Γ₀','The image in its pro-p completion of a p-torsion Golod–Shafarevich quotient of a Golod–Shafarevich group with property (T). It is infinite, residually finite and torsion, and property (T) passes to quotients (Proposition 8.4).','!finite rf torsion t','ershov2008'),
  g('guba','Guba’s finitely generated divisible group','Gᵤ','A nontrivial two-generated group in which every element has a root of every degree, with unique extraction of roots. Unique roots force torsion-freeness: gⁿ = 1 = 1ⁿ gives g = 1.','fg divisible !trivial tf','guba1986'),
  g('cornulier','de Cornulier’s non-Hopfian Kazhdan group','Γ_dC','A finitely presented group with Kazhdan’s property (T) admitting a surjective endomorphism that is not injective. By Mal’cev’s theorem it is not residually finite.','fp !hopfian t','cornulier2007'),
- g('openaiFP','A finitely presented non-sofic group','Γ_fp','A finitely presented group built from finitely many elements of OpenAI’s non-sofic binary Leavitt elementary group with the relations of their partial multiplication table. Soficity passes to subgroups and is closed under limits of marked groups, so a large enough table gives a finitely presented non-sofic group. OpenAI’s Lean file proves exactly this passage (exists_finitelyPresented_nonsofic_group); Fournier-Facio states it in print. No further property is assigned.','fp !sofic','openaiLean'),
- g('fournierFacio','Fournier-Facio’s torsion-free non-sofic group','Γ_FF','A finitely presented torsion-free group built in an August 2026 preprint by small-cancellation steps from an embedding of a universal finitely presented torsion-free group into a Kazhdan group. A copy of Thompson’s group V inside it would have to be LEF if the group were sofic (Theorem 1.3).','fp tf !sofic','fournierFacio2026')
+ g('openaiFP','A finitely presented non-sofic group','Γ_fp','A finitely presented group built from finitely many elements of OpenAI’s non-sofic binary Leavitt elementary group with the relations of their partial multiplication table. Soficity passes to subgroups and is closed under limits of marked groups, so a large enough table gives a finitely presented non-sofic group. OpenAI’s Lean file proves exactly this passage (exists_finitelyPresented_nonsofic_group); Fournier-Facio states it in print. No further property is assigned.','fp !sofic','openaiLean')
 ];
-
-// Named open, answered and excluded questions live in questions.mjs; they never supply certificates.
