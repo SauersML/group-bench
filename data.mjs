@@ -133,6 +133,7 @@ export const sources = {
  adamsBallmann1998:{title:'Adams–Ballmann — Amenable isometry groups of Hadamard spaces, Math. Ann. 312 (1998)',url:'https://doi.org/10.1007/s002080050218'},
  gerstenShort1991:{title:'Gersten–Short — Rational subgroups of biautomatic groups, Ann. of Math. 134 (1991)',url:'https://doi.org/10.2307/2944334'},
  bridsonHaefliger:{title:'Bridson–Haefliger — Metric spaces of non-positive curvature (1999), III.Γ',url:'https://doi.org/10.1007/978-3-662-12494-9'},
+ epstein1992:{title:'Epstein, Cannon, Holt, Levy, Paterson, Thurston — Word Processing in Groups (1992), Theorem 2.5.1 and §4: an automatic group has a rational growth series',url:'https://doi.org/10.1201/9781439865699'},
  alonso1992:{title:'Alonso — Combings of groups, in Algorithms and Classification in Combinatorial Group Theory, MSRI Publ. 23 (1992)',note:'Combable groups are of type FP∞.'},
  bbmz2023:{title:'Belk–Bleak–Matucci–Zaremsky — Hyperbolic groups satisfy the Boone–Higman conjecture (2023), Theorem 3.6 (Kuznetsov’s theorem)',url:'https://arxiv.org/abs/2306.16356'},
  mckinseyMostowski:{title:'McKinsey (1943), Mostowski (1966), Mal’cev (1958) — the word problem is decidable in finitely presented residually finite groups',note:'Enumerate finite quotients against consequences of the relators.'},
@@ -272,6 +273,7 @@ for(const id of ['tf','rf','rn','bo','haagerup','finite_cd']) add('free',id,'Fre
 add('free fg','hyp','The Cayley graph for a finite free basis is a tree.');
 add('free !cyclic','f2','A free basis has at least two elements.');
 chain(['hyp','biautomatic','automatic','fp'],'Hyperbolic groups are biautomatic; automatic groups are finitely presented.','ggt');
+add('automatic','!intermediate','The growth series of an automatic group is rational, so its coefficients satisfy a linear recurrence and the growth is polynomial or exponential, never strictly between.','epstein1992');
 add('automatic','word','Automatic structures give an algorithm to solve the word problem.','ggt');
 add('hyp','conjugacy','Hyperbolic groups have a decidable conjugacy problem.','ggt');
 add('conjugacy','word','A word is the identity exactly when it is conjugate to the identity.');
@@ -382,7 +384,7 @@ export const groups = [
  g('sl2z','Special linear group SL₂(ℤ)','SL₂(ℤ)','The determinant-one 2 × 2 integer matrices, virtually free, with centre {±I}. Contains Sanov’s free pair.','fp linear hyp !tf f2 !centerless','free'),
  g('sl25','Binary icosahedral group SL(2,5)','SL(2,5)','The Schur cover of A₅: a finite perfect group with centre {±I}.','finite perfect !centerless','robinson'),
  g('affine_sl3','Affine group ℤ³ ⋊ SL₃(ℤ)','ℤ³⋊SL₃(ℤ)','Kazhdan (Bekka–de la Harpe–Valette, Example 1.7.4), linear and residually finite. Conjugation by diag(2,2,2,1) in GL₄(ℤ) is an injective endomorphism of index eight, so the group is not co-Hopfian. Perfect since SL₃(ℤ) is perfect and (A − I)ℤ³ spans ℤ³. The group-approximation manuscript states this self-embedding and Lean-verifies property (T) and residual finiteness.','fp t linear rf !cohopfian perfect','kazhdan'),
- g('sp21_lattice','Torsion-free cocompact lattice in Sp(2,1)','Γ_Sp','A torsion-free finite-index subgroup (Selberg) of a cocompact lattice in Sp(2,1) (Borel). It acts freely and cocompactly on the CAT(−1) quaternionic hyperbolic plane, so it is hyperbolic, CAT(0), of type F and of finite cohomological dimension, and it has property (T) (Kostant).','fp finfty tf hyp cat0 finite_cd t','kostant1969'),
+ g('sp21_lattice','Torsion-free cocompact lattice in Sp(2,1)','Γ_Sp','A torsion-free finite-index subgroup (Selberg) of a cocompact lattice in Sp(2,1) (Borel). It acts freely and cocompactly on the CAT(−1) quaternionic hyperbolic plane, so it is hyperbolic, CAT(0), of type F and of finite cohomological dimension, and it has property (T) (Kostant).','fp finfty tf hyp cat0 finite_cd t !finite !vabelian linear rf','kostant1969'),
  g('le_boudec','Le Boudec’s group G(F,F′)','G(F,F′)','A finitely generated group acting on a tree with trivial amenable radical whose reduced C*-algebra is not simple, answering de la Harpe’s question.','fg tar !cstar','leBoudec2015'),
  g('lodha_moore','Lodha–Moore group','G_LM','A finitely presented non-amenable group of piecewise projective homeomorphisms of the line with no free subgroup of rank two (after Monod); C*-simple by Le Boudec–Matte Bon.','fp !amenable !f2 cstar','lodhaMoore2013'),
  g('z2_semidirect_f2','ℤ² ⋊ Γ with Γ ≤ SL₂(ℤ) free of rank two','ℤ²⋊F₂','The semidirect product of ℤ² with a torsion-free finite-index subgroup Γ of SL₂(ℤ), free of rank two. The pair (ℤ² ⋊ Γ, ℤ²) has relative property (T) (Burger), so the group is not Haagerup; an extension of locally indicable groups is locally indicable; it surjects onto Γ ↠ ℤ, so it has no property (T).','fp tf li !haagerup !t f2','burger1991'),
