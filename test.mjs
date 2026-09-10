@@ -185,3 +185,22 @@ test('recent and historical additions certify only their recorded group properti
  assert.equal(history.kun_thom.firstProof,'2026-08-20');
  assert.equal(history.fisher_lodha.firstProof,'2026-08-26');
 });
+
+import {readFileSync} from 'node:fs';
+import {render,START,END,unresolvedPairs,openQuestionTable,gapRows,counts,HYPER} from './open-questions.mjs';
+test('README open-question tables are generated from the catalog and account for every unresolved pair once',()=>{
+ const readme=readFileSync(new URL('./README.md',import.meta.url),'utf8');
+ const start=readme.indexOf(START),end=readme.indexOf(END);
+ assert.ok(start>=0&&end>start,'README.md lacks the open-questions markers');
+ assert.equal(readme.slice(start+START.length,end).trim(),render().trim(),'README.md is stale: run `node open-questions.mjs --write`');
+ const pairs=unresolvedPairs(),table=openQuestionTable(),{hyper,rows}=gapRows();
+ assert.equal(pairs.length,counts().unresolved);
+ assert.equal(table.reduce((n,t)=>n+t.cells.length,0)+hyper.length+rows.reduce((n,r)=>n+r.partners.length,0),pairs.length);
+ const seen=new Set();
+ for(const key of [...table.flatMap(t=>t.cells),...hyper].map(p=>p.pair.join(','))){assert.ok(!seen.has(key),key);seen.add(key);}
+ for(const row of rows)for(const partner of row.partners){const key=[row.literal,partner].sort().join(',');assert.ok(!seen.has(key),key);seen.add(key);}
+ assert.equal(seen.size,pairs.length);
+ for(const t of table)if(t.question.requirements.length<=2)assert.ok(t.cells.length>=1,`${t.question.id} names no cell on the map`);
+ assert.ok(hyper.every(p=>p.pair.includes(HYPER))&&!rows.some(r=>r.literal===HYPER||r.partners.includes(HYPER)));
+ for(const t of table)assert.ok(render().includes(t.question.question),t.question.id);
+});
