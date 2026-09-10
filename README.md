@@ -45,6 +45,7 @@ GitHub Pages publishes automatically on pushes to `main`.
 Every rule is a conjunction of signed premises implying one signed conclusion.
 Do not add disputed preprints as established facts or label database gaps as
 open problems without a separately maintained, dated literature assessment.
+That assessment is `questions.mjs`, described below.
 
 `engine.mjs` converts rules to clauses, propagates facts with proof traces,
 and uses DPLL to certify contradictions that require case splits. It never
@@ -77,6 +78,38 @@ The Sauers example pins PALOMAR-2026-08-24-000006 v1, the source commit, compare
 theorem, verification time, statement, proof, and machine-readable registry
 record. It witnesses finitely presented + sofic + not MF, and therefore also
 hyperlinear + not MF via the separately sourced sofic ⇒ hyperlinear theorem.
+
+## Named questions
+
+`questions.mjs` is a dated literature assessment of existence questions of the
+form “is there a group with exactly these properties?”. Each entry names its
+signed literals, a status, the assessment date, and sources:
+
+- **open**: the cited sources state the question as unresolved on the
+  assessment date. This is a statement about the literature, not a proof of
+  openness, and it is never inferred from a gap in the grid.
+- **solved**: formerly open, with the date and author of the answer and the
+  catalog witness that realises it. The witness may be a later example than
+  the first solution; the note says so.
+- **impossible**: excluded by a theorem recorded as a rule, with its source.
+
+The tests require every status to agree with the map: an open entry has neither
+a witness nor an obstruction here, a solved entry names a group the classifier
+returns for its literals, and an impossible entry is contradicted by the rules.
+Adding a witness or rule that decides an open question therefore fails the
+build until the entry is updated. The page lists the questions by status and
+places any of them on the map; a cell whose requirements match an entry
+exactly shows it in the evidence panel and on hover.
+
+The current assessment covers the Burnside problems and their finitely
+presented forms, Milnor’s growth problem, Day’s and von Neumann’s amenability
+problems, finitely presented simple amenable and divisible groups, Gromov’s
+residual-finiteness question for hyperbolic groups, residually finite torsion
+Kazhdan groups, non-Hopfian Kazhdan groups, and the non-sofic questions,
+including the finitely presented and torsion-free forms answered in August
+2026. Questions whose properties are not axes of this atlas (Tarski monsters,
+Noetherian groups, unitarisable groups, groups isomorphic to their square,
+finitely many conjugacy classes, Scott sentences, type F) are not recorded.
 
 ## Pairs solved over time
 

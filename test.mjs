@@ -3,6 +3,7 @@ import {test} from 'node:test';
 import {history,formatDate} from './history.mjs';
 import {properties,rules,groups,sources} from './data.mjs';
 import {propertyId,negate,propagate,consistent,classify,explanation,signatures} from './engine.mjs';
+import {questions} from './questions.mjs';
 test('catalog references and signatures are internally consistent',()=>{
  const ids=new Set(properties.map(p=>p.id));assert.equal(ids.size,properties.length);
  assert.equal(new Set(groups.map(g=>g.id)).size,groups.length);
@@ -17,6 +18,48 @@ test('named deep intersections have real witnesses',()=>{
  assert.ok(classify(['fp','amenable','!ea']).witnesses.some(g=>g.id==='grigorchuk98'));
  assert.ok(classify(['intermediate','!rf']).witnesses.some(g=>g.id==='erschler'));
  assert.ok(classify(['acyclic','tf','fp','!rf']).witnesses.some(g=>g.id==='higman'));
+ assert.ok(classify(['fg','!finite','exponent','!amenable','!f2','!rf']).witnesses.some(g=>g.id==='burnside'));
+ assert.ok(classify(['fp','!amenable','!f2','!tf','!torsion']).witnesses.some(g=>g.id==='olshanskiiSapir'));
+ assert.ok(classify(['fg','simple','amenable','!finite','!fp','!rf']).witnesses.some(g=>g.id==='juschenkoMonod'));
+ assert.ok(classify(['rf','torsion','t','!finite','!amenable','!exponent']).witnesses.some(g=>g.id==='ershov'));
+ assert.ok(classify(['fg','divisible','!trivial','!finite']).witnesses.some(g=>g.id==='guba'));
+ assert.ok(classify(['fp','!hopfian','t','!rf']).witnesses.some(g=>g.id==='cornulier'));
+ assert.ok(classify(['fp','!sofic']).witnesses.some(g=>g.id==='openaiFP'));
+ assert.ok(classify(['fp','tf','!sofic']).witnesses.some(g=>g.id==='fournierFacio'));
+ assert.equal(classify(['fg','rf','exponent','!finite']).status,'impossible');
+ assert.notEqual(classify(['rf','exponent','!finite']).status,'impossible','Zel’manov’s theorem needs finite generation.');
+ assert.equal(classify(['torsion','f2']).status,'impossible');
+ const burnside=signatures.find(s=>s.group.id==='burnside');
+ for(const literal of ['t','!t','fp','!fp','simple','!simple'])assert.ok(!burnside.facts.has(literal),`Not decided for free Burnside groups: ${literal}`);
+});
+test('named questions agree with the catalog and carry dated sources',()=>{
+ const ids=new Set(properties.map(p=>p.id)),dateShape=/^\d{4}(-\d{2}(-\d{2})?)?$/;
+ assert.equal(new Set(questions.map(q=>q.id)).size,questions.length);
+ for(const item of questions){
+  assert.match(item.assessed,/^\d{4}-\d{2}-\d{2}$/,item.id);
+  assert.equal(new Set(item.literals).size,item.literals.length,item.id);
+  for(const lit of item.literals)assert.ok(ids.has(propertyId(lit)),`${item.id} ${lit}`);
+  assert.ok(item.question&&item.note,item.id);
+  if(item.posed){assert.ok(sources[item.posed.source],item.id);assert.ok(item.posed.by,item.id);if(item.posed.date!==null)assert.match(item.posed.date,dateShape,item.id);}
+  const result=classify(item.literals);
+  if(item.status==='open'){
+   assert.equal(result.status,'unresolved',`${item.id} is recorded open but the catalog decides it`);
+   assert.ok(item.sources.length,item.id);for(const id of item.sources)assert.ok(sources[id]?.url,`${item.id} ${id}`);
+   assert.ok(!item.resolved&&!item.obstruction,item.id);
+  }else if(item.status==='solved'){
+   assert.equal(result.status,'exists',item.id);
+   assert.ok(result.witnesses.some(g=>g.id===item.resolved.witness),`${item.id} witness ${item.resolved.witness}`);
+   assert.ok(sources[item.resolved.source]?.url,item.id);assert.match(item.resolved.date,dateShape,item.id);assert.ok(item.resolved.by,item.id);
+   assert.ok(history[item.resolved.witness],item.id);
+  }else if(item.status==='impossible'){
+   assert.equal(result.status,'impossible',item.id);
+   assert.ok(sources[item.obstruction.source],item.id);
+  }else assert.fail(`${item.id}: unknown status ${item.status}`);
+ }
+ assert.ok(questions.some(q=>q.id==='hyperbolic-not-rf'&&q.status==='open'));
+ assert.ok(questions.some(q=>q.id==='fp-intermediate'&&q.status==='open'));
+ assert.ok(questions.some(q=>q.id==='nonsofic'&&q.status==='solved'&&q.resolved.witness==='openai'));
+ assert.ok(questions.some(q=>q.id==='rf-exponent'&&q.status==='impossible'));
 });
 test('multi-premise implications preserve all hypotheses and contrapositives',()=>{
  assert.equal(classify(['fp','lef','!rf']).status,'impossible');

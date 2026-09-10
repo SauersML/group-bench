@@ -4,6 +4,27 @@ export const sources = {
  openaiAnnouncement:{title:'OpenAI — Ten advances in mathematics and theoretical computer science (1 August 2026)',url:'https://openai.com/index/ten-advances-in-mathematics/'},
  growthQuestion:{title:'Babenko–Sabourau — Minimal volume entropy and fiber growth (2025), §2.8',url:'https://jep.centre-mersenne.org/item/10.5802/jep.295.pdf'},
  hyperbolicQuestion:{title:'Schesler — Finitely generated infinite torsion groups that are residually finite simple (2025), Introduction',url:'https://doi.org/10.1016/j.aim.2025.110441'},
+ openaiLean:{title:'OpenAI — ten-proofs, NonSoficGroup.lean: exists_finitelyPresented_nonsofic_group (Lean 4 certificate, committed 2 August 2026)',url:'https://github.com/openai/ten-proofs/blob/main/NonSoficGroup.lean'},
+ fournierFacio2026:{title:'Fournier-Facio — A torsion-free non-sofic group (arXiv:2608.02025, 3 August 2026; revised 14 August 2026)',url:'https://arxiv.org/abs/2608.02025'},
+ sapirProblems:{title:'Sapir — Some group theory problems (2007), Problems 1.1 and 1.2',url:'https://arxiv.org/abs/0704.2899'},
+ juschenkoProblems:{title:'Juschenko — Amenability of discrete groups by examples (2017 lecture notes), Appendix C: conjectures and open problems',url:'https://metaphor.ethz.ch/x/2017/hs/401-3370-67L/sc/Juschenko.pdf'},
+ milnor1968:{title:'Grigorchuk — Milnor’s problem on the growth of groups and its consequences (2011 survey; Milnor, Problem 5603, Amer. Math. Monthly 75 (1968))',url:'https://arxiv.org/abs/1111.0512'},
+ burnsideHistory:{title:'MacTutor History of Mathematics — A history of the Burnside problem',url:'https://mathshistory.st-andrews.ac.uk/HistTopics/Burnside_problem/'},
+ golod1964:{title:'Golod — On nil-algebras and finitely approximable p-groups (1964)',url:'https://www.mathnet.ru/php/archive.phtml?wshow=paper&jrnid=im&paperid=2956&option_lang=eng'},
+ novikovAdian1968:{title:'Novikov–Adian — Infinite periodic groups. I (1968)',url:'https://www.mathnet.ru/php/archive.phtml?wshow=paper&jrnid=im&paperid=2699&option_lang=eng'},
+ adian1982:{title:'Adian — Random walks on free periodic groups (1982)',url:'https://www.mathnet.ru/php/archive.phtml?wshow=paper&jrnid=im&paperid=1699&option_lang=eng'},
+ zelmanov1990:{title:'Zel’manov — Solution of the restricted Burnside problem for groups of odd exponent (1990; translation 1991)',url:'https://iopscience.iop.org/article/10.1070/IM1991v036n01ABEH001946'},
+ zelmanov1991:{title:'Zel’manov — A solution of the restricted Burnside problem for 2-groups (1991)',url:'https://www.mathnet.ru/eng/sm1311'},
+ day1957:{title:'Day — Amenable semigroups (1957)',url:'https://doi.org/10.1215/ijm/1255380675'},
+ olshanskii1980:{title:'Ol’shanskii — On the problem of the existence of an invariant mean on a group (1980)',url:'https://www.mathnet.ru/eng/rm3788'},
+ olshanskiiSapir2002:{title:'Ol’shanskii–Sapir — Non-amenable finitely presented torsion-by-cyclic groups (arXiv, 30 August 2002)',url:'https://arxiv.org/abs/math/0208237'},
+ olshanskiiSapir2003:{title:'Ol’shanskii–Sapir — Non-amenable finitely presented torsion-by-cyclic groups, Publ. Math. IHÉS 96 (2003)',url:'https://numdam.org/item/PMIHES_2003__96__43_0.pdf'},
+ matui2006:{title:'Matui — Some remarks on topological full groups of Cantor minimal systems (April 2004 preprint; Internat. J. Math. 17 (2006))',url:'https://arxiv.org/abs/math/0404117'},
+ juschenkoMonod2012:{title:'Juschenko–Monod — Cantor systems, piecewise translations and simple amenable groups (arXiv, April 2012)',url:'https://arxiv.org/abs/1204.2132'},
+ juschenkoMonod2013:{title:'Juschenko–Monod — Cantor systems, piecewise translations and simple amenable groups, Ann. of Math. 178 (2013)',url:'https://doi.org/10.4007/annals.2013.178.2.7'},
+ ershov2008:{title:'Ershov — Golod–Shafarevich groups with property (T) and Kac–Moody groups, Duke Math. J. 145 (2008)',url:'https://doi.org/10.1215/00127094-2008-053'},
+ guba1986:{title:'Guba — A finitely generated complete group (1986; translation 1987)',url:'https://www.mathnet.ru/eng/im1540'},
+ cornulier2007:{title:'de Cornulier — Finitely presentable, non-Hopfian groups with Kazhdan’s Property (T) and infinite outer automorphism group (February 2005 preprint; Proc. Amer. Math. Soc. 135 (2007))',url:'https://arxiv.org/abs/math/0502140'},
  bdh1980:{title:'Baumslag–Dyer–Heller — The topology of discrete groups (1980)',url:'https://doi.org/10.1016/0022-4049(80)90040-7'},
  cde2012:{title:'Carrión–Dadarlat–Eckhardt — On groups with quasidiagonal C*-algebras (2012)',url:'https://arxiv.org/abs/1210.4050v1'},
  tww2015:{title:'Tikuisis–White–Winter — Quasidiagonality of nuclear C*-algebras (2015)',url:'https://arxiv.org/abs/1509.08318v1'},
@@ -177,6 +198,8 @@ add('tar','utrace','The unique trace property is equivalent to triviality of the
 add('tar amenable','trivial','An amenable group is its own amenable radical.');
 add('tar','centerless','The center is an abelian, hence amenable, normal subgroup.');
 add('simple !amenable','tar','Any amenable normal subgroup would have to be trivial or the entire group.');
+add('fg rf exponent','finite','Zel’manov’s positive solution of the restricted Burnside problem, with the Hall–Higman reduction and the classification of finite simple groups, bounds the order of every finite m-generator group of exponent n. A finitely generated group has finitely many normal subgroups of index below that bound; in a residually finite group of exponent n their intersection is trivial, so the group is finite.','zelmanov1991');
+add('torsion','!f2','A free subgroup of rank two contains elements of infinite order.');
 
 const g = (id,name,symbol,description,facts,source) => ({id,name,symbol,description,facts:facts.split(' '),source});
 export const groups = [
@@ -204,11 +227,15 @@ export const groups = [
  g('nekrashevych','Nekrashevych’s simple torsion group','N','An infinite finitely generated simple torsion group of intermediate growth containing the first Grigorchuk group.','!finite fg simple torsion intermediate !exponent','nekrashevych'),
  g('openai','OpenAI’s non-sofic Leavitt unit group','L₂×','The countable unit group of the binary Leavitt algebra L_F₂(1,2). OpenAI’s Chapter 3 proves that this group is not sofic.','!sofic','openaiNonsofic'),
  g('sauers','Sauers’ sofic non-MF group','E','The explicit finitely presented group in Palomar record PALOMAR-2026-08-24-000006 v1. The pinned theorem proves soficity and failure of the CDE operator-norm MF property.','fp sofic !mf','palomar'),
- g('thompson','Thompson’s group F','F','Piecewise-linear dyadic homeomorphisms of the unit interval. Amenability is deliberately not assigned here.','!finite fp finfty tf !abelian !ea !rf !f2 bo exp !simple','thompson')
+ g('thompson','Thompson’s group F','F','Piecewise-linear dyadic homeomorphisms of the unit interval. Amenability is deliberately not assigned here.','!finite fp finfty tf !abelian !ea !rf !f2 bo exp !simple','thompson'),
+ g('burnside','Free Burnside group B(2, n), n odd ≥ 4381','B(2,n)','The quotient of the free group of rank two by the normal subgroup generated by all nth powers, for a fixed odd exponent n ≥ 4381. Novikov and Adian proved it infinite; Adian proved it non-amenable. Adian later lowered the bound for infiniteness to odd n ≥ 665, which is not separately sourced here. Finite presentability, simplicity and property (T) are not assigned.','fg !finite exponent !amenable','novikovAdian1968'),
+ g('olshanskiiSapir','Ol’shanskii–Sapir group','Gₙ','For a sufficiently large odd n, a finitely presented ascending HNN extension of a finitely generated infinite group of exponent n (Theorem 1.1). It contains a free Burnside group of exponent n, so it has torsion, and it maps onto an infinite cyclic group, so it is not a torsion group. It is non-amenable and has no free subgroup of rank two.','fp !amenable !f2 !tf !torsion','olshanskiiSapir2003'),
+ g('juschenkoMonod','Juschenko–Monod simple amenable group','[[T]]′','The commutator subgroup of the topological full group of a minimal Cantor subshift. Matui proved it simple, finitely generated and never finitely presented; Juschenko and Monod proved that topological full groups of minimal Cantor systems are amenable.','!finite fg simple amenable !fp','juschenkoMonod2013'),
+ g('ershov','Ershov’s residually finite torsion Kazhdan group','Γ₀','The image in its pro-p completion of a p-torsion Golod–Shafarevich quotient of a Golod–Shafarevich group with property (T). It is infinite, residually finite and torsion, and property (T) passes to quotients (Proposition 8.4).','!finite rf torsion t','ershov2008'),
+ g('guba','Guba’s finitely generated divisible group','Gᵤ','A nontrivial two-generated group in which every element has a root of every degree, with unique extraction of roots. Unique roots force torsion-freeness: gⁿ = 1 = 1ⁿ gives g = 1.','fg divisible !trivial tf','guba1986'),
+ g('cornulier','de Cornulier’s non-Hopfian Kazhdan group','Γ_dC','A finitely presented group with Kazhdan’s property (T) admitting a surjective endomorphism that is not injective. By Mal’cev’s theorem it is not residually finite.','fp !hopfian t','cornulier2007'),
+ g('openaiFP','A finitely presented non-sofic group','Γ_fp','A finitely presented group built from finitely many elements of OpenAI’s non-sofic binary Leavitt elementary group with the relations of their partial multiplication table. Soficity passes to subgroups and is closed under limits of marked groups, so a large enough table gives a finitely presented non-sofic group. OpenAI’s Lean file proves exactly this passage (exists_finitelyPresented_nonsofic_group); Fournier-Facio states it in print. No further property is assigned.','fp !sofic','openaiLean'),
+ g('fournierFacio','Fournier-Facio’s torsion-free non-sofic group','Γ_FF','A finitely presented torsion-free group built in an August 2026 preprint by small-cancellation steps from an embedding of a universal finitely presented torsion-free group into a Kazhdan group. A copy of Thompson’s group V inside it would have to be LEF if the group were sofic (Theorem 1.3).','fp tf !sofic','fournierFacio2026')
 ];
 
-// Context for exact pair queries; these notes do not supply mathematical certificates.
-export const notableQuestions = [
- {pair:['fp','intermediate'],question:'Can a finitely presented group have intermediate growth?',note:'A longstanding open question on group growth, stated as open in the cited 2025 paper.',source:'growthQuestion'},
- {pair:['hyp','!rf'],question:'Is every hyperbolic group residually finite?',note:'This cell asks for a counterexample to Gromov’s residual-finiteness question, stated as open in the cited 2025 paper.',source:'hyperbolicQuestion'}
-];
+// Named open, answered and excluded questions live in questions.mjs; they never supply certificates.

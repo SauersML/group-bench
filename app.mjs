@@ -1,4 +1,5 @@
-import {properties,groups,sources,notableQuestions} from './data.mjs';
+import {properties,groups,sources} from './data.mjs';
+import {questions} from './questions.mjs';
 import {history as groupHistory,formatDate} from './history.mjs';
 import {datedSignatures} from './timeline.mjs';
 const datedGroups=new Map(datedSignatures().map(s=>[s.group.id,s.facts]));
@@ -9,9 +10,38 @@ const defaultProperties=['fp','intermediate','hyp','rf','!rf','amenable','!amena
 const state={query:[],properties:[...defaultProperties],cell:null};
 let pickerTarget='properties';
 const activeQuery=()=>[...new Set([...state.query,...(state.cell||[])])];
-const notableQuestion=query=>notableQuestions.find(item=>query.length===2&&item.pair.every(literal=>query.includes(literal)));
 const statusLabel={exists:'Example exists',impossible:'Impossible',unresolved:'Unknown'};
 function sourceHTML(id){const s=sources[id];return s.url?`<a class="source" href="${escape(s.url)}" target="_blank" rel="noopener">${escape(s.title)} ↗</a>`:`<span class="source">${escape(s.title)} · ${escape(s.note)}</span>`;}
+// A named question applies only to the exact set of selected requirements.
+const questionKey=literals=>[...new Set(literals)].sort().join(',');
+const questionFor=query=>questions.find(item=>questionKey(item.literals)===questionKey(query));
+const questionStatusLabel={open:'Open question',solved:'Answered',impossible:'Excluded by theorem'};
+const questionSummary=item=>item.status==='solved'?`Answered ${formatDate(item.resolved.date)} · ${item.resolved.by}`:item.status==='open'?`Stated open in the cited sources, assessed ${formatDate(item.assessed)}`:'Excluded by a recorded theorem';
+const questionSources=item=>[...new Set([item.posed?.source,...(item.sources||[]),item.resolved?.source,item.obstruction?.source].filter(Boolean))];
+function questionDatesHTML(item){
+ const parts=[];
+ if(item.posed)parts.push(`Asked${item.posed.date?' '+escape(formatDate(item.posed.date)):''} · ${escape(item.posed.by)}`);
+ if(item.resolved)parts.push(`Answered ${escape(formatDate(item.resolved.date))} · ${escape(item.resolved.by)} · catalog witness: ${escape(groups.find(g=>g.id===item.resolved.witness).name)}`);
+ if(item.status==='open')parts.push(`Stated open in the cited sources · assessed ${escape(formatDate(item.assessed))}`);
+ if(item.status==='impossible')parts.push('Excluded by the recorded rules');
+ return parts.map(part=>`<span>${part}</span>`).join('');
+}
+function questionHTML(item){return `<div class="question-card ${item.status}"><div class="question-head"><span class="eyebrow">NAMED QUESTION</span><span class="status-badge question-${item.status}">${questionStatusLabel[item.status]}</span></div><p class="question-text">${escape(item.question)}</p><div class="question-dates">${questionDatesHTML(item)}</div><p class="question-note">${escape(item.note)}</p>${questionSources(item).map(sourceHTML).join('')}</div>`;}
+function renderQuestions(){
+ const headings={open:'Still open',solved:'Answered',impossible:'Excluded by theorem'};
+ $('#question-list').innerHTML=Object.keys(headings).map(status=>{
+  const items=questions.filter(q=>q.status===status);
+  return `<div class="question-group"><h3>${headings[status]} <span>${items.length}</span></h3>`+items.map(item=>`<article class="question-row ${item.status}"><button class="question-open" data-question="${item.id}" aria-label="Show on the map: ${escape(item.question)}"><strong>${escape(item.question)}</strong><span class="question-literals">${item.literals.map(lit=>`<span class="chip ${lit[0]==='!'?'negative':''}">${escape(label(lit))}</span>`).join('')}</span></button><div class="question-dates">${questionDatesHTML(item)}</div><p class="question-note">${escape(item.note)}</p><div class="question-sources">${questionSources(item).map(sourceHTML).join('')}</div></article>`).join('')+'</div>';
+ }).join('');
+ $('#question-count').textContent=`${questions.length} questions · assessed ${formatDate(questions[0].assessed)}`;
+}
+function showQuestion(item){
+ state.properties=[...new Set([...state.properties,...item.literals])];
+ const cell=[item.literals[0],item.literals[1]||item.literals[0]].sort((a,b)=>state.properties.indexOf(a)-state.properties.indexOf(b));
+ state.query=item.literals.slice(2);state.cell=cell;render();
+ $('.matrix-scroll').scrollIntoView({block:'start'});
+ document.querySelector(`[data-cell="${cell.join(',')}"]`)?.focus({preventScroll:true});hideHover();
+}
 function historyHTML(group){
  const h=groupHistory[group.id];
  let html=`<details class="provenance"><summary><span>${escape(h.dateKind)}</span><strong>${escape(formatDate(h.firstProof))}</strong></summary><p>${escape(h.note)}</p>${sourceHTML(h.source)}`;
@@ -97,6 +127,8 @@ function renderEvidence(){
  let html=`<div class="evidence-head"><div><div class="eyebrow">SELECTED INTERSECTION</div><h2 class="evidence-title">${titles[result.status]}</h2></div><span class="status-badge ${result.status}">${statusLabel[result.status]}</span></div>`;
  html+=`<div class="evidence-query">${query.map(lit=>`<span>${escape(label(lit))}</span>`).join('')||'<span>No restrictions</span>'}</div>`;
  html+='<button class="quiet" id="clear-cell">Close evidence</button>';
+ const question=questionFor(query);
+ if(question)html+=questionHTML(question);
  if(result.status==='exists'){
   html+='<div class="witnesses">'+result.witnesses.map((g,i)=>`<details class="witness" ${i===0?'open':''}><summary><span class="group-symbol">${escape(g.symbol)}</span><span>${escape(g.name)}</span></summary><p>${escape(g.description)}</p>${historyHTML(g)}${sourceHTML(g.source)}<div class="facts">${(query.length?query:g.facts.slice(0,7)).map(lit=>`<button class="fact ${lit[0]==='!'?'negative':''}" data-proof="${g.id}|${lit}" title="Show why this property holds">${escape(label(lit))} ↗</button>`).join('')}</div><button class="quiet" data-group="${g.id}">Explore all recorded properties →</button></details>`).join('')+'</div>';
  }else if(result.status==='impossible'){
@@ -104,10 +136,7 @@ function renderEvidence(){
   html+=`<p class="detail-copy">These requirements already conflict: <strong>${proof.core.map(lit=>escape(label(lit))).join(' AND ')}</strong>.${proof.byCases?' The following rules exclude every Boolean case.':''}</p>`;
   html+='<ol class="proof-list">'+proof.steps.map(step=>`<li><strong>${step.literal?escape(label(step.literal)):escape(step.rule.when.map(label).join(' AND '))+' ⇒ '+escape(label(step.rule.then))}</strong><br>${escape(step.rule.reason)}${sourceHTML(step.rule.source)}</li>`).join('')+'</ol>';
   if(!proof.steps.length)html+='<p class="detail-copy">The same property is both required and excluded.</p>';
- }else{
-  const question=notableQuestion(query);
-  html+=question?`<p class="detail-copy"><strong>${escape(question.question)}</strong><br>${escape(question.note)}</p>${sourceHTML(question.source)}`:'<p class="detail-copy">No matching example or impossibility proof is recorded. This does not necessarily mean an open problem.</p>';
- }
+ }else if(!question)html+='<p class="detail-copy">No matching example or impossibility proof is recorded. This does not necessarily mean an open problem.</p>';
  if(result.status!=='impossible'){
   const inferred=[...result.closure.facts.keys()].filter(lit=>!query.includes(lit));
   if(inferred.length)html+=`<details class="inferences"><summary>${inferred.length} further properties forced by your requirements</summary><div class="facts">${inferred.map(lit=>`<button class="fact ${lit[0]==='!'?'negative':''}" data-inference="${lit}">${escape(label(lit))} ↗</button>`).join('')}</div></details>`;
@@ -133,8 +162,9 @@ function showHover(anchor){
   const lit=anchor.dataset.hoverProperty,p=byId[propertyId(lit)];
   html=`<strong>${escape(label(lit))}</strong><p>${lit[0]==='!'?'Does not satisfy the following property: ':''}${escape(p.definition)}</p>`;
  }else{
-  const query=[...new Set([...state.query,...anchor.dataset.cell.split(',')])],result=classify(query);
+  const query=[...new Set([...state.query,...anchor.dataset.cell.split(',')])],result=classify(query),question=questionFor(query);
   html=`<strong>${escape(query.map(label).join(' AND '))}</strong><p class="text-${result.status}">${statusLabel[result.status]}</p>`;
+  if(question)html+=`<p><strong>${escape(question.question)}</strong><br>${escape(questionSummary(question))}</p>`;
   if(result.status==='exists'){
    const g=result.witnesses[0],h=groupHistory[g.id];
    html+=`<strong>${escape(g.name)}</strong><p>${escape(g.description)}</p><p>${escape(h.dateKind)}: ${escape(formatDate(h.firstProof))}</p>`;
@@ -146,10 +176,7 @@ function showHover(anchor){
    html+=`<p>Conflicting requirements: ${escape(proof.core.map(label).join(' AND '))}.</p>`;
    const step=proof.steps.at(-1);
    html+=step?`<p>${escape(step.rule.reason)}</p><small>Source: ${escape(sources[step.rule.source].title)}</small>`:'<p>A property and its negation cannot both hold.</p>';
-  }else{
-   const question=notableQuestion(query);
-   html+=question?`<p><strong>${escape(question.question)}</strong></p><p>${escape(question.note)}</p><small>Source: ${escape(sources[question.source].title)}</small>`:'<p>No matching example or impossibility proof is recorded.</p>';
-  }
+  }else html+=question?`<p>${escape(question.note)}</p><small>Source: ${escape(sources[question.sources[0]].title)}</small>`:'<p>No matching example or impossibility proof is recorded.</p>';
   html+='<p class="hover-hint">Click the cell for full evidence and source links.</p>';
  }
  const card=$('#hover-card');card.innerHTML=html;card.hidden=false;anchor.setAttribute('aria-describedby','hover-card');
@@ -185,6 +212,7 @@ document.addEventListener('click',event=>{
  if(el.dataset.remove){state.query=state.query.filter(lit=>lit!==el.dataset.remove);state.cell=null;render();}
  else if(el.dataset.cell){hideHover();state.cell=el.dataset.cell.split(',');renderMap();renderEvidence();saveURL();document.querySelector(`[data-cell="${el.dataset.cell}"]`)?.focus({preventScroll:true});hideHover();}
  else if(el.id==='clear-cell'){state.cell=null;render();}
+ else if(el.dataset.question){showQuestion(questions.find(q=>q.id===el.dataset.question));}
  else if(el.dataset.define){const p=byId[el.dataset.define];openDetail(p.name,`<p>${escape(p.definition)}</p>${sourceHTML(p.source)}`);}
  else if(el.dataset.proof){
   const [id,literal]=el.dataset.proof.split('|'),group=groups.find(g=>g.id===id);
@@ -210,4 +238,4 @@ $('#matrix').addEventListener('keydown',event=>{
  if(row<0||col<row||col>=state.properties.length)return;
  document.querySelector(`[data-cell="${state.properties[row]},${state.properties[col]}"]`).focus();
 });
-readURL();render();
+readURL();render();renderQuestions();

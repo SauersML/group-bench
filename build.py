@@ -8,7 +8,7 @@ import shutil
 import subprocess
 
 ROOT = Path(__file__).resolve().parent
-ASSETS = ('index.html', 'style.css', 'app.mjs', 'engine.mjs', 'data.mjs', 'history.mjs', 'progress.mjs', 'timeline.mjs', 'rule-history.mjs', 'og.svg')
+ASSETS = ('index.html', 'style.css', 'app.mjs', 'engine.mjs', 'data.mjs', 'history.mjs', 'progress.mjs', 'timeline.mjs', 'rule-history.mjs', 'questions.mjs', 'og.svg')
 
 def build(out: Path):
     subprocess.run(['node', '--test', str(ROOT / 'test.mjs'), str(ROOT / 'timeline.test.mjs')], check=True)

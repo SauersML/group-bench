@@ -31,8 +31,9 @@ export const ruleHistory=[
  dateRule('finite_cd','tf','2005-06-10','higman','Located homological proof: finite integral cohomological dimension forces torsion-freeness.'),
  dateRule('fp2','fg','2005-06-10','higman','Type FP1 is finite generation; see the discussion after Corollary 13.'),
  dateRule('amenable','mf','2015-09-28','tww2015','Corollary C, combined with the 2012 CDE characterization.',['cde2012']),
+ dateRule('fg rf exponent','finite','1991','zelmanov1991','Restricted Burnside problem: odd exponents in 1990 and 2-groups in 1991, with the Hall–Higman reduction and the classification of finite simple groups.',['zelmanov1990']),
 ];
 // These are logical/definitional steps only. They can carry a dated proof
 // forward, but do not receive fabricated original publication dates themselves.
-const structuralIds=new Set(['r7','r8','r9','r10','r27','r28','r29','r40','r41','r42','r43','r44','r45','r46','r48','r49','r50','r61','r62','r63','r64','r66','r67','r68','r69','r70','r71','r72','r73','r74','r76','r82','r109','r119','r120']);
+const structuralIds=new Set(['r7','r8','r9','r10','r27','r28','r29','r40','r41','r42','r43','r44','r45','r46','r48','r49','r50','r61','r62','r63','r64','r66','r67','r68','r69','r70','r71','r72','r73','r74','r76','r82','r109','r119','r120','r122']);
 export const structuralRules=rules.filter(r=>structuralIds.has(r.id));
