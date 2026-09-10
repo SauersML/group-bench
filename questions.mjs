@@ -26,6 +26,12 @@ export const questions=[
  question('automatic_biautomatic','automatic !biautomatic','Is every automatic group biautomatic?','open',{
   source:'rees2022',sourceDate:'2022-05-30',
   note:'Automatic means synchronous automatic in the usual group-theoretic sense.'}),
+ question('automatic_hopfian','automatic !hopfian','Is every automatic group Hopfian?','open',{
+  source:'mccammondSurvey',sourceDate:'2007',
+  note:'McCammond’s Question 21. Wise’s tubular group is CAT(0) and not Hopfian, and his Question 36 notes that deciding its synchronous automaticity would answer this question or show that not every CAT(0) group is automatic; only an asynchronous automatic structure is known for it.'}),
+ question('biautomatic_hopfian','biautomatic !hopfian','Is every biautomatic group Hopfian?','open',{
+  source:'mccammondSurvey',sourceDate:'2007',
+  note:'The second half of McCammond’s Question 21. Biautomaticity implies automaticity, so a negative answer here would also answer the automatic case.'}),
  question('automatic_conjugacy','automatic !conjugacy','Does every automatic group have a decidable conjugacy problem?','open',{
   source:'rees2022',sourceDate:'2022-05-30',
   note:'The word problem is decidable for automatic groups; the conjugacy question remains separate.'}),
