@@ -1,5 +1,14 @@
 // All statements concern countable discrete groups. Missing facts are unknown.
 export const sources = {
+ bdh1980:{title:'Baumslag–Dyer–Heller — The topology of discrete groups (1980)',url:'https://doi.org/10.1016/0022-4049(80)90040-7'},
+ cde2012:{title:'Carrión–Dadarlat–Eckhardt — On groups with quasidiagonal C*-algebras (2012)',url:'https://arxiv.org/abs/1210.4050v1'},
+ tww2015:{title:'Tikuisis–White–Winter — Quasidiagonality of nuclear C*-algebras (2015)',url:'https://arxiv.org/abs/1509.08318v1'},
+ elek2004:{title:'Elek–Szabó — Hyperlinearity and the sofic property (2004 preprint; 2005 publication)',url:'https://arxiv.org/abs/math/0408400'},
+ vershik1997:{title:'Vershik–Gordon — Groups locally embeddable in finite groups (1997)',url:'https://www.mathnet.ru/eng/aa751'},
+ gromov1981:{title:'Gromov — Groups of polynomial growth and expanding maps (1981)',url:'https://numdam.org/item/PMIHES_1981__53__53_0/'},
+ neumann1929:{title:'von Neumann — Zur allgemeinen Theorie des Masses (1929)',url:'https://eudml.org/doc/211921'},
+ powers1975:{title:'Powers — Simplicity of the C*-algebra of the free group on two generators (1975)',url:'https://doi.org/10.1215/S0012-7094-75-04213-1'},
+ haagerup1979:{title:'Haagerup — An example of a non nuclear C*-algebra (1979)',url:'https://eudml.org/doc/142617'},
  palomar:{title:'Sauers — PALOMAR-2026-08-24-000006 v1',url:'https://palomar-registry.org/entry?id=PALOMAR-2026-08-24-000006&version=1'},
  hamilton:{title:'Hamilton — On Quaternions; original communication in 1843',url:'https://www.maths.tcd.ie/pub/HistMath/People/Hamilton/Quatern2/Quatern2.html'},
  dyck1882:{title:'Dyck — Gruppentheoretische Studien (1882)',url:'https://eudml.org/doc/157013'},
@@ -183,7 +192,7 @@ export const groups = [
  g('dihedral','Infinite dihedral group','D∞','The free product C₂ * C₂, or the symmetries of the integer line. Its translations form an infinite cyclic subgroup of index two.','!finite fg vabelian solvable !abelian !tf !torsion centerless hyp cat0 !cohopfian !perfect !simple','ggt'),
  g('heisenberg','Integral Heisenberg group','H₃(ℤ)','Upper triangular 3 × 3 integer matrices with diagonal entries 1. Nilpotent of class two, with a central copy of ℤ.','!finite fg nilpotent !abelian tf bo linear !vabelian !automatic !cat0 finfty finite_cd !simple !perfect !centerless','ggt'),
  g('lamplighter','Lamplighter group','C₂ ≀ ℤ','A finitely supported row of two-state lamps, together with a shift. A metabelian group with exponential growth.','!finite fg solvable !nilpotent !tf !torsion rf !fp exp !perfect !simple centerless','robinson'),
- g('grigorchuk','First Grigorchuk group','𝔊','An infinite, finitely generated torsion 2-group acting on the binary rooted tree. The first example of intermediate growth.','!finite fg torsion !exponent rf intermediate !ea !fp !simple','growth'),
+ g('grigorchuk','First Grigorchuk group','𝔊','An infinite, finitely generated torsion 2-group acting on the binary rooted tree. The first example of intermediate growth.','!finite fg torsion !exponent rf intermediate !ea !fp !simple word','growth'),
  g('sl3z','Special linear group SL₃(ℤ)','SL₃(ℤ)','The determinant-one 3 × 3 integer matrices. A basic infinite linear group with Kazhdan’s property (T).','t linear !finite !tf !torsion','kazhdan'),
  g('higman','Higman group','H','The four-generator group ⟨a,b,c,d | aᵇ=a², bᶜ=b², cᵈ=c², dᵃ=d²⟩. Its presentation complex is a finite classifying space; it has no nontrivial finite quotients.','!trivial fp tf acyclic finite_cd finfty !rf','higman'),
  g('grigorchuk98','Grigorchuk’s finitely presented extension','𝔊̃','A finitely presented amenable extension constructed outside the elementary amenable class.','fp amenable !ea','grigorchuk98'),

@@ -1,4 +1,4 @@
-# Group Atlas
+# Group Bench
 
 [Explore the live atlas](https://sauersml.github.io/group-atlas/)
 
@@ -67,3 +67,23 @@ The Sauers example pins PALOMAR-2026-08-24-000006 v1, the source commit, compare
 theorem, verification time, statement, proof, and machine-readable registry
 record. It witnesses finitely presented + sofic + not MF, and therefore also
 hyperlinear + not MF via the separately sourced sofic ⇒ hyperlinear theorem.
+
+## Pairs solved over time
+
+The denominator is all unordered pairs of distinct signed properties: with 57
+properties and their negations, there are 114 × 113 / 2 = 6,441 pairs. Mirror
+cells count once and diagonal repetitions are excluded. Filters and the visible
+grid never change this denominator. The chart always runs from 0 to 100%.
+
+The curve combines explicit dated property proofs with dated implication
+theorems. A deduction uses the latest date among every premise and theorem;
+the earliest supported derivation or witness is used for each pair. Pure logical
+contradictions and proofs with missing dates remain undated. Construction dates
+are never transferred to later properties. “Derived by” dates are upper bounds
+from the recorded literature, not universal first-publication claims. Solved pairs without established proof
+dates are counted separately. These dates document source coverage, not a
+complete reconstruction of historical priority.
+
+`timeline.mjs` computes the global counts and dated witnesses. The build writes
+`pair-history.json` for the chart, so full-catalog enumeration never blocks the
+browser. Each dated pair links back to its witness and source records.

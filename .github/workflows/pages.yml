@@ -1,4 +1,4 @@
-name: Publish Group Atlas
+name: Publish Group Bench
 on:
   push:
     branches: [main]

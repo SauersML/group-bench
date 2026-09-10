@@ -1,5 +1,7 @@
 import {properties,groups,sources} from './data.mjs';
 import {history as groupHistory,formatDate} from './history.mjs';
+import {datedSignatures} from './timeline.mjs';
+const datedGroups=new Map(datedSignatures().map(s=>[s.group.id,s.facts]));
 import {byId,label,propertyId,classify,explanation,signatures,witnessProof} from './engine.mjs';
 const $=selector=>document.querySelector(selector);
 const escape=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -19,6 +21,8 @@ function historyHTML(group){
 }
 function factDateHTML(group,literal){
  const milestones=groupHistory[group.id].milestones.filter(m=>m.facts.includes(literal));
+ const derived=datedGroups.get(group.id).get(literal);
+ if(!milestones.length&&derived)return `<div class="fact-date">Derived by ${escape(formatDate(derived.date))}${derived.sources.map(sourceHTML).join('')}</div>`;
  return milestones.length?milestones.map(m=>`<div class="fact-date">${escape(m.kind)} · ${escape(formatDate(m.date))}${sourceHTML(m.source)}</div>`).join(''):'<span class="source">First proof date: unknown.</span>';
 }
 
@@ -163,7 +167,7 @@ document.addEventListener('click',event=>{
  else if(el.dataset.proof){
   const [id,literal]=el.dataset.proof.split('|'),group=groups.find(g=>g.id===id);
   const steps=witnessProof(group,literal);
-  openDetail(`${group.name}: ${label(literal)}`,`<ol class="proof-list">${steps.map(step=>`<li><strong>${escape(label(step.literal))}</strong><br>${escape(step.rule?step.rule.reason:group.description)}${sourceHTML(step.rule?step.rule.source:group.source)}${step.rule?'':factDateHTML(group,step.literal)}</li>`).join('')}</ol>`);
+  openDetail(`${group.name}: ${label(literal)}`,`<ol class="proof-list">${steps.map(step=>`<li><strong>${escape(label(step.literal))}</strong><br>${escape(step.rule?step.rule.reason:group.description)}${sourceHTML(step.rule?step.rule.source:group.source)}${factDateHTML(group,step.literal)}</li>`).join('')}</ol>`);
  }else if(el.dataset.group){
   const signature=signatures.find(s=>s.group.id===el.dataset.group);
   const facts=[...signature.facts.keys()].sort((a,b)=>label(a).localeCompare(label(b)));

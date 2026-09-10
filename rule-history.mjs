@@ -1,0 +1,38 @@
+import {rules} from './data.mjs';
+const dateRule=(when,then,date,source,note,dependencies=[])=>{
+ const rule=rules.find(r=>r.when.join(' ')===when&&r.then===then);
+ if(!rule)throw new Error('Missing dated rule '+when+' => '+then);
+ return {rule,date,source,note,dependencies};
+};
+// A located proof is an upper bound, not a claim that the result was new then.
+export const ruleHistory=[
+ dateRule('amenable','!f2','1929','neumann1929','Invariant means and the free-group obstruction.'),
+ dateRule('t','fg','1967','kazhdan1967','Finite generation for discrete groups with property (T).'),
+ dateRule('free','haagerup','1979','haagerup1979','Positive-definite free-group approximations.'),
+ dateRule('poly_growth','vnilpotent','1981','gromov1981','Polynomial growth theorem.'),
+ dateRule('fg vnilpotent','poly_growth','1981','gromov1981','Located statement of the converse; the paper cites earlier work of Wolf.'),
+ dateRule('subexp','amenable','1984','grigorchuk1984','Located proof of the invariant-mean consequence of subexponential growth.'),
+ dateRule('rf','lef','1997','vershik1997','Local finite models from separating finite quotients.'),
+ dateRule('fp lef','rf','1997','vershik1997','Finite presentability turns local finite models into quotient maps.'),
+ dateRule('sofic','hyperlinear','2005','elek2004','Published original theorem; a 2004 preprint is also recorded by arXiv.'),
+ dateRule('lef','lea','2008-04-24','approximation','Section 4: local finite models are initially subamenable models.'),
+ dateRule('lea','sofic','2008-04-24','approximation','Example 4.5; located proof, with earlier Gromov work cited.'),
+ dateRule('amenable','lea','2008-04-24','approximation','Section 4 definition, using the group itself as the local model.'),
+ dateRule('amenable','haagerup','2008-04-24','approximation','Section 8; located statement, not original priority.'),
+ dateRule('lef','mf','2012-10-15','cde2012','Proposition 2.13.'),
+ dateRule('cstar','utrace','2014-10-09','cstar','Theorem 1.6 / Corollary 4.2 in version 1.'),
+ dateRule('utrace','tar','2014-10-09','cstar','Theorem 1.6 / Corollary 4.2 in version 1.'),
+ dateRule('tar','utrace','2014-10-09','cstar','Theorem 1.6 / Corollary 4.2 in version 1.'),
+ dateRule('bo','li','2015-07-29','orders','Located exposition: bi-orders are Conradian, and Conradian orderability is local indicability.'),
+ dateRule('li','lo','2015-07-29','orders','Located exposition of Conradian orderability and local indicability.'),
+ dateRule('lo','up','2015-07-29','orders','Section 1, left orders imply unique products.'),
+ dateRule('poly_growth','subexp','2006-07-17','growth','Section 1 compares polynomial and subexponential growth.'),
+ dateRule('fg !subexp','exp','2006-07-17','growth','Section 1, Exercise 1.6: the submultiplicative growth limit.'),
+ dateRule('finite_cd','tf','2005-06-10','higman','Located homological proof: finite integral cohomological dimension forces torsion-freeness.'),
+ dateRule('fp2','fg','2005-06-10','higman','Type FP1 is finite generation; see the discussion after Corollary 13.'),
+ dateRule('amenable','mf','2015-09-28','tww2015','Corollary C, combined with the 2012 CDE characterization.',['cde2012']),
+];
+// These are logical/definitional steps only. They can carry a dated proof
+// forward, but do not receive fabricated original publication dates themselves.
+const structuralIds=new Set(['r7','r8','r9','r10','r27','r28','r29','r40','r41','r42','r43','r44','r45','r46','r48','r49','r50','r61','r62','r63','r64','r66','r67','r68','r69','r70','r71','r72','r73','r74','r76','r82','r109','r119','r120']);
+export const structuralRules=rules.filter(r=>structuralIds.has(r.id));

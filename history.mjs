@@ -28,6 +28,30 @@ export const history = {
  thompson:{firstProof:'1965',dateKind:'Construction date reported in the literature',source:'thompson',note:'Cannon–Floyd–Parry (1996) attribute the definitions to Richard Thompson in 1965. Their article is a later source, not a 1965 publication.',milestones:[{date:'1984',kind:'Detailed published property proof',claim:'Brown–Geoghegan establish the infinite-dimensional finiteness properties of F; their result was announced in 1983.',source:'brown1984',facts:[]}]},
  sauers:{firstProof:'2026-08-24',dateKind:'First registered formal proof',source:'palomar',note:'Sauers. The pinned v1 record was mechanically verified at 18:17:14 UTC and registered at 20:15:36 UTC on 24 August 2026.',milestones:[{date:'2026-08-24',kind:'Registered formal proof',claim:'The displayed finitely presented group is sofic and not MF in the Carrión–Dadarlat–Eckhardt operator-norm sense.',source:'palomar',facts:['fp','sofic','!mf']}],priority:{claim:'First non-MF group',attribution:'Sauers (author’s priority claim)',note:'The registry verifies the pinned formal result; its editorial record does not certify novelty.'},formal:{theorem:'ExplicitNonMF.explicit_sofic_not_MF',recordId:'PALOMAR-2026-08-24-000006',version:1,verifiedAt:'2026-08-24T18:17:14Z',commit:'f6ccc7a138b281eb6c4eedf111c6cbd37b4917ce',statement:'https://github.com/SauersML/group-approximation/blob/f6ccc7a138b281eb6c4eedf111c6cbd37b4917ce/Palomar/Challenge.lean',proof:'https://github.com/SauersML/group-approximation/blob/f6ccc7a138b281eb6c4eedf111c6cbd37b4917ce/PalomarSolution.lean',record:'https://data.palomar-registry.org/entries/PALOMAR-2026-08-24-000006-v1.json',assurance:'Palomar reports successful comparison, Lean kernel checking, and NanoDa checking of the pinned proof. Subsequent displayed deductions are not independently Lean-checked.'}}
 };
+// Additional dated property proofs, kept distinct from first construction dates.
+const milestone=(group,date,source,kind,claim,facts)=>history[group].milestones.push({date,source,kind,claim,facts:facts.split(' ')});
+milestone('free2','1882','dyck1882','Construction and immediate consequences','The two-generator free construction: free, finitely generated, infinite and nonabelian.','free fg !finite !abelian');
+milestone('free2','1929','neumann1929','Published property proof','The rank-two free group is nonamenable.','!amenable');
+milestone('free2','1975','powers1975','Published property proof','C*-simplicity and uniqueness of the canonical trace.','cstar utrace');
+milestone('free2','1979','haagerup1979','Published property proof','Positive-definite functions vanishing at infinity give the Haagerup property.','haagerup');
+milestone('freeinf','1979','haagerup1979','Published property proof','The free-group construction of positive-definite approximations also applies to countable rank.','free haagerup');
+milestone('prufer','1923','prufer1923','Construction and immediate consequences','The quasicyclic primary group is infinite, abelian, torsion and divisible.','!finite abelian torsion divisible');
+milestone('higman','1951-01','higman1951','Published construction','The four-generator presentation defines an infinite torsion-free group with no nontrivial finite quotients.','fp !finite tf !rf');
+milestone('higman','1980-01','bdh1980','Published property proof','Acyclicity and a finite two-dimensional classifying space.','acyclic finite_cd finfty');
+milestone('grigorchuk','1984','grigorchuk1984','Published property proof','A recursive contraction algorithm solves the word problem.','word');
+milestone('higman','2005-06-10','higman','Located proof; historical upper bound','Theorem 8 and Corollary 9: an acyclic group with a finite two-dimensional classifying space. Earlier work is cited there.','acyclic finite_cd finfty');
+milestone('thompson','1984','brown1984','Published property proof','A finite-type classifying space establishes type F∞; the group is torsion-free.','finfty tf');
+for(const group of ['z','z2','q'])milestone(group,'1929','neumann1929','Published class theorem','Abelian groups admit invariant means. Applied to this classical abelian example.','abelian amenable');
+for(const group of ['free2','freeinf'])milestone(group,'2008-04-24','approximation','Located proof; historical upper bound','Examples 4.2–4.3 document residual finiteness and soficity of free groups.','free rf sofic');
+for(const h of Object.values(history))h.milestones.sort((a,b)=>compareDates(a.date,b.date));
+// A year/month-only proof is placed at the end of its known period. This is
+// an internal conservative bound; the UI retains the original date precision.
+export function dateBoundary(date){
+ if(date.length===4)return `${date}-12-31`;
+ if(date.length===7){const [year,month]=date.split('-').map(Number);return `${date}-${new Date(Date.UTC(year,month,0)).getUTCDate()}`;}
+ return date;
+}
+export function compareDates(a,b){return dateBoundary(a).localeCompare(dateBoundary(b));}
 export function formatDate(date){
  if(date===null)return 'Not established';
  if(/^\d{4}$/.test(date))return date;
