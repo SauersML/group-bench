@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Group Atlas — a map of mathematical possibility</title>
+<meta name="description" content="Explore intersections of group properties, find example groups, and follow sourced proofs of impossibility.">
+<meta property="og:title" content="Group Atlas"><meta property="og:description" content="A map of mathematical possibility. Explore group properties, witnesses, and obstructions.">
+<meta property="og:type" content="website"><meta property="og:image" content="https://sauersml.github.io/group-atlas/og.png">
+<link rel="stylesheet" href="./style.css"><script type="module" src="./app.mjs"></script>
+</head>
+<body>
+<header class="topbar"><a class="brand" href="./"><span class="brand-icon" aria-hidden="true">G</span> GROUP ATLAS</a><span class="edition">A MAP OF MATHEMATICAL POSSIBILITY</span><button id="about-button" class="quiet">How to read the map ↗</button></header>
+<main>
+<section class="intro"><div><div class="eyebrow">THE LANDSCAPE OF GROUPS</div><h1>What can a group be?</h1><p>Choose properties. Explore their intersections.<br>Find a witness—or the reason one cannot exist.</p></div><div class="census" id="census"></div></section>
+<div class="workspace">
+<aside class="palette"><div class="section-top"><h2>Properties</h2><button id="clear" class="quiet">Clear all</button></div><p class="muted small">Every property has a complement.<br>Require <b>+</b>, require NOT <b>−</b>, or leave unrestricted.</p><label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Try sofic or not sofic…" aria-label="Search properties"></label><div id="property-list"></div></aside>
+<section class="explorer">
+<div class="query-bar"><span class="eyebrow">YOUR REGION</span><div id="query-chips"></div><div class="query-actions"><button id="copy" class="quiet">Copy link ↗</button><span id="copy-status" role="status"></span></div></div>
+<div class="map-top"><div><h2>Intersection map</h2><p class="muted small">Each cell adds its row <i>and</i> column to your region.</p></div><label class="select-label">Neighborhood<select id="collection"></select></label></div>
+<div class="map-controls"><div class="legend"><span><i class="dot exists"></i>Exists</span><span><i class="dot impossible"></i>Impossible</span><span><i class="dot unresolved"></i>Unresolved</span></div><div class="axis-toggles"><label>Rows <select id="row-sign" aria-label="Row requirement"><option value="1">have +</option><option value="-1">do not have −</option></select></label><label>Columns <select id="column-sign" aria-label="Column requirement"><option value="1">have +</option><option value="-1">do not have −</option></select></label></div></div>
+<div class="matrix-scroll" tabindex="0" aria-label="Scrollable intersection map"><div id="matrix"></div></div>
+<p class="map-caption"><span id="map-summary"></span><span>Click a cell to inspect its evidence ↓</span></p>
+<section id="evidence" aria-live="polite"></section>
+<section class="trails"><div class="section-top"><h2>Take a path through the atlas</h2><span class="eyebrow">CURATED EXPLORATIONS</span></div><div id="presets"></div></section>
+</section>
+</div>
+<footer><span>Countable discrete groups · Sourced mathematical evidence</span><span>Unresolved means this atlas cannot decide. It does not necessarily mean an open problem.</span></footer>
+</main>
+<dialog id="about"><div class="dialog-head"><span class="eyebrow">FIELD NOTES</span><button id="close-about" aria-label="Close field notes">✕</button></div><h2>A map, with evidence.</h2><p>Each property is a yes-or-no question about a <strong>countable discrete group</strong>. Your filters form a conjunction: every requirement must hold at once.</p><p><strong class="text-exists">Exists</strong> means an actual example in the catalog is known to satisfy every requirement. Click its facts to trace the evidence.</p><p><strong class="text-impossible">Impossible</strong> means the requirements contradict sourced mathematical rules. The atlas displays the conflicting requirements and the deductions.</p><p><strong class="text-unresolved">Unresolved</strong> means neither certificate is available in this catalog. A consistent Boolean assignment is never treated as a group. Missing facts are never treated as false.</p><p>This is a curated starting atlas, not a complete classification. Sources are attached to definitions, example facts, and rules. Some examples link to independently checked formal proofs, identified in their provenance. The atlas’s own deductions are <strong>not Lean-checked certificates</strong>.</p><p>Growth and algorithmic properties include finite generation in their definitions. “Simple” excludes the trivial group; “free” includes it. A group can have some torsion without being a torsion group.</p><p>Each example has a first-proof date field and source, with unknown dates stated explicitly. Construction, announcement, publication, and formal verification dates are distinguished. A date is not automatically applied to properties proved later, and an earliest recorded source does not by itself certify historical priority.</p><p>The map is a two-dimensional slice of a larger property space. Use the row and column signs for negation, and filters for additional dimensions. Links preserve your region and map settings.</p><p><a href="./data.mjs" target="_blank" rel="noopener">Explore the open data ↗</a></p></dialog>
+</body></html>
